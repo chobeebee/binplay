@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -29,5 +31,14 @@ public class Users extends Timestamped{
     private String grade;
 
     @Column(name = "is_active", nullable = false)
-    private boolean isActive;
+    private Boolean isActive;
+
+    @OneToMany(mappedBy = "user")
+    private List<Videos> videos;
+
+    @OneToMany(mappedBy = "user")
+    private List<Streams> streams;
+
+    @OneToMany(mappedBy = "user")
+    private List<Payments> payments;
 }
