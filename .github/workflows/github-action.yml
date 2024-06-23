@@ -10,8 +10,9 @@ name: github-action
 on:
   push:
     branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -61,7 +62,41 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    # Generates and submits a dependency graph, enabling Dependabot Alerts for all project dependencies.
-    # See: https://github.com/gradle/actions/blob/main/dependency-submission/README.md
-    - name: Generate and submit dependency graph
-      uses: gradle/actions/dependency-submission@417ae3ccd767c252f5661f1ace9f835f9654f2b5 # v3.1.0
+      ## create application-database.yaml
+    - name: make application-database.yaml
+      run: |
+        ## create application-database.yaml
+        cd ./src/main/resources
+
+        # application-database.yaml 파일 생성
+        touch ./application-database.yaml
+
+        # GitHub-Actions 에서 설정한 값을 application-database.yaml 파일에 쓰기
+        echo "${{ secrets.DATABASE }}" >> ./application-database.yaml
+      shell: bash
+
+      ## gradle build
+    - name: Build with Gradle
+      run: ./gradlew bootJar
+
+
+      ## 웹 이미지 빌드 및 도커허브에 push
+    - name: web docker build and push
+      run: |
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker build -t ${{ secrets.DOCKER_REPO }}/second-eyes-web .
+        docker push ${{ secrets.DOCKER_REPO }}/second-eyes-web
+
+      ## docker compose up
+    - name: executing remote ssh commands using password
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ubuntu
+        key: ${{ secrets.KEY }}
+        script: |
+          sudo docker rm -f $(docker ps -qa)
+          sudo docker pull ${{ secrets.DOCKER_REPO }}/second-eyes-web
+          sudo docker pull ${{ secrets.DOCKER_REPO }}/second-eyes-nginx
+          docker-compose up -d
+          docker image prune -f
