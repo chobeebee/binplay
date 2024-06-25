@@ -1,12 +1,13 @@
 package com.sparta.binplay.entity;
 
-import com.sparta.binplay.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "users")
 @NoArgsConstructor
 public class Users extends Timestamped{
@@ -21,6 +22,12 @@ public class Users extends Timestamped{
     @Column(name="password", nullable = false)
     private String password;
 
+    @Column(name="username", nullable = false)
+    private String username;
+
+    @Column(name="name", nullable = false)
+    private String name;
+
     @Column(name="grade")
     private String grade;
 
@@ -30,20 +37,4 @@ public class Users extends Timestamped{
 
     @Column(name="is_active", nullable = false)
     private boolean isActive;
-
-    public Users(UserRequestDto requestDto) {
-        this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
-        this.grade = requestDto.getGrade();
-        this.role = requestDto.getRole();
-        this.isActive = requestDto.isActive();
-    }
-
-    public void update(UserRequestDto requestDto) {
-        this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
-        this.grade = requestDto.getGrade();
-        this.role = requestDto.getRole();
-        this.isActive = requestDto.isActive();
-    }
 }
