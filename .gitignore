@@ -39,3 +39,7 @@ out/
 application-sensitive.properties
 docker-compose.yml
 *.env
+
+/db_data/**
+/app-data/**
+/redis_data/**
