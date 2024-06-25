@@ -14,11 +14,9 @@ import java.time.LocalDateTime;
 public abstract class Timestamped {
     @CreatedDate
     @Column(name="created_at", updatable = false) //업데이트를 막음
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
     @Column(name="updated_at")
-    @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 }

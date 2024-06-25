@@ -1,15 +1,12 @@
 package com.sparta.binplay.entity;
 
+import com.sparta.binplay.dto.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Getter
-@Setter
 @Table(name = "users")
 @NoArgsConstructor
 public class Users extends Timestamped{
@@ -18,27 +15,35 @@ public class Users extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
-    @Column(name = "email", nullable = false)
+    @Column(name="email", nullable = false, unique = true)
     private String email;
 
     @Column(name="password", nullable = false)
     private String password;
 
-    @Column(name="name", nullable = false)
-    private String name;
-
-    @Column(name = "grade", nullable = false)
+    @Column(name="grade")
     private String grade;
 
-    @Column(name = "is_active", nullable = false)
-    private Boolean isActive;
+    @Enumerated(EnumType.STRING)
+    @Column(name="role", nullable = false)
+    private Role role;
 
-    @OneToMany(mappedBy = "user")
-    private List<Videos> videos;
+    @Column(name="is_active", nullable = false)
+    private boolean isActive;
 
-    @OneToMany(mappedBy = "user")
-    private List<Streams> streams;
+    public Users(UserRequestDto requestDto) {
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
+        this.grade = requestDto.getGrade();
+        this.role = requestDto.getRole();
+        this.isActive = requestDto.isActive();
+    }
 
-    @OneToMany(mappedBy = "user")
-    private List<Payments> payments;
+    public void update(UserRequestDto requestDto) {
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
+        this.grade = requestDto.getGrade();
+        this.role = requestDto.getRole();
+        this.isActive = requestDto.isActive();
+    }
 }

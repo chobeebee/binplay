@@ -1,7 +1,15 @@
 package com.sparta.binplay.repository;
 
+import com.sparta.binplay.entity.Users;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class UserRepository {
+public interface UserRepository extends JpaRepository<Users, Long> {
+    /*Users findByEmail(String email);
+
+    Users findByUserId(Long userId);
+
+    boolean existsByEmail(String email);*/
+
 }
