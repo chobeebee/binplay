@@ -50,7 +50,7 @@ jobs:
         run: ./gradlew clean build
 
       - name: docker image build
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }} binplay:latest .
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/binplay:latest .
 
       - name: docker login
         uses: docker/login-action@v2
@@ -59,4 +59,4 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: docker Hub push
-        run: docker push ${{ secrets.DOCKER_USERNAME }} binplay:latest
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/binplay:latest
