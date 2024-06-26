@@ -19,13 +19,13 @@ public class Users extends Timestamped{
     @Column(name="email", nullable = false, unique = true)
     private String email;
 
-    @Column(name="password", nullable = false)
+    @Column(name="password")
     private String password;
 
-    @Column(name="username", nullable = false)
+    @Column(name="username")
     private String username;
 
-    @Column(name="name", nullable = false)
+    @Column(name="name")
     private String name;
 
     @Column(name="grade")

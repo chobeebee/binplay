@@ -12,4 +12,10 @@ public class MainController {
     public String mainAPI() {
         return "main route";
     }
+
+    @GetMapping("/loginTest")
+    @ResponseBody
+    public String loginAPI() {
+        return "login route";
+    }
 }
