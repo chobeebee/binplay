@@ -1,5 +1,6 @@
 package com.sparta.binplay.entity;
 
+import com.sparta.binplay.dto.request.UserRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +26,7 @@ public class Users extends Timestamped{
     @Column(name="username")
     private String username;
 
-    @Column(name="name")
+    @Column(name="name", nullable = false)
     private String name;
 
     @Column(name="grade")
@@ -37,4 +38,22 @@ public class Users extends Timestamped{
 
     @Column(name="is_active", nullable = false)
     private boolean isActive;
+
+    public Users(UserRequestDto requestDto) {
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
+        this.username = requestDto.getName();
+        this.grade = requestDto.getGrade();
+        this.role = requestDto.getRole();
+        this.isActive = requestDto.isActive();
+    }
+
+    public void update(UserRequestDto requestDto) {
+        this.email = requestDto.getEmail();
+        this.password = requestDto.getPassword();
+        this.name = requestDto.getName();
+        this.grade = requestDto.getGrade();
+        this.role = requestDto.getRole();
+        this.isActive = requestDto.isActive();
+    }
 }
