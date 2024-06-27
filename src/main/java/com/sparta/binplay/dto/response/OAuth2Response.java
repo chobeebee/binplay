@@ -1,4 +1,4 @@
-package com.sparta.binplay.dto;
+package com.sparta.binplay.dto.response;
 
 public interface OAuth2Response {
     //제공자 (Ex. naver, google, ...)

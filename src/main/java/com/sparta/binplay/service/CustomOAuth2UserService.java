@@ -1,7 +1,7 @@
 package com.sparta.binplay.service;
 
-import com.sparta.binplay.dto.GoogleResponse;
-import com.sparta.binplay.dto.OAuth2Response;
+import com.sparta.binplay.dto.response.GoogleResponse;
+import com.sparta.binplay.dto.response.OAuth2Response;
 import com.sparta.binplay.dto.UserDTO;
 import com.sparta.binplay.entity.CustomOAuth2User;
 import com.sparta.binplay.entity.Role;
@@ -20,7 +20,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     public CustomOAuth2UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
-
+    
+    //유저 정보 DB 저장
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
 
@@ -34,7 +35,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         } else {
             return null;
         }
-
+        
         String username = oAuth2Response.getProvider()+" "+oAuth2Response.getProviderId();
         Users existData = userRepository.findByUsername(username);
 

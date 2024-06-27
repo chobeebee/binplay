@@ -1,4 +1,4 @@
-package com.sparta.binplay.dto;
+package com.sparta.binplay.dto.request;
 
 import com.sparta.binplay.entity.Role;
 import jakarta.validation.constraints.Email;
@@ -10,7 +10,7 @@ import lombok.Getter;
 @Getter
 public class UserRequestDto {
     @NotBlank(message = "이메일은 필수입니다.")
-    @Email(message = "유효하지않은 이메일입니다.")
+    @Email(message = "유효하지 않은 이메일입니다.")
     private String email;
 
     @NotBlank(message = "비밀번호는 필수입니다.")
