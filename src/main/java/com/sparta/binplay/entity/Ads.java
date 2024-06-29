@@ -4,8 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Entity
 @Getter
 @Table(name="ads")
@@ -16,6 +14,7 @@ public class Ads extends Timestamped{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adId;
 
-    @OneToMany(mappedBy = "ad")
-    private List<VideoAd> videoAds;
+    @ManyToOne
+    @JoinColumn(name = "video_id", nullable = false)
+    private Videos video;
 }
