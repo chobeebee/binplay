@@ -31,6 +31,6 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
         System.out.println("JSESSIONID and Authorization cookies deleted");
 
         // 로그아웃 성공 후 리디렉션
-        response.sendRedirect("/loginTest");
+        response.sendRedirect("/login");
     }
 }

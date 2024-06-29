@@ -1,10 +1,12 @@
 package com.sparta.binplay.config;
 
 import com.sparta.binplay.jwt.JWTFilter;
-import com.sparta.binplay.oauth2.CustomLogoutSuccessHandler;
 import com.sparta.binplay.oauth2.CustomSuccessHandler;
 import com.sparta.binplay.service.CustomOAuth2UserService;
 import com.sparta.binplay.service.JWTUtil;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,6 +15,10 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -20,13 +26,12 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final CustomSuccessHandler customSuccessHandler;
     private final JWTUtil jwtUtil;
-    private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
+    //private final CustomLogoutSuccessHandler customLogoutSuccessHandler;
 
-    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JWTUtil jwtUtil, CustomLogoutSuccessHandler customLogoutSuccessHandler) {
+    public SecurityConfig(CustomOAuth2UserService customOAuth2UserService, CustomSuccessHandler customSuccessHandler, JWTUtil jwtUtil) {
         this.customOAuth2UserService = customOAuth2UserService;
         this.customSuccessHandler = customSuccessHandler;
         this.jwtUtil = jwtUtil;
-        this.customLogoutSuccessHandler = customLogoutSuccessHandler;
     }
 
     @Bean
@@ -44,12 +49,6 @@ public class SecurityConfig {
         http
                 .httpBasic((auth) -> auth.disable());
 
-        //JWTFilter
-        http
-                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
-        http
-                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
-
         //oauth2 로그인 설정
         http
                 .oauth2Login((oauth2) -> oauth2
@@ -58,9 +57,16 @@ public class SecurityConfig {
                         .successHandler(customSuccessHandler)
                 );
 
+        //JWTFilter
+        http
+                .addFilterBefore(new JWTFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class) //form 로그인 끄면 아예 안 쓰는 애
+                .addFilterAfter(new JWTFilter(jwtUtil), OAuth2LoginAuthenticationFilter.class);
+
         //경로별 인가 작업
         http
                 .authorizeHttpRequests((auth) -> auth
+                        .requestMatchers("/oauth2/authorization/google").permitAll() //구글만
+                        //.requestMatchers("/oauth2/authorization/*").permitAll() //여러 소셜 로그인 있을 경우
                         .requestMatchers("/").permitAll()
                         .anyRequest().authenticated());
 
@@ -68,15 +74,56 @@ public class SecurityConfig {
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+//        // CORS 설정
+//        http
+//                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+//
+//                    CorsConfiguration configuration = new CorsConfiguration();
+//
+//                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+//                    configuration.setAllowedMethods(Collections.singletonList("*"));
+//                    configuration.setAllowCredentials(true);
+//                    configuration.setAllowedHeaders(Collections.singletonList("*"));
+//                    configuration.setMaxAge(3600L);
+//
+//                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+//                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+//
+//                    return configuration;
+//                }));
 
          //로그아웃 설정
         http
-                .logout((oauth2) -> oauth2
-                        .logoutUrl("/api/auth/logout") // 로그아웃 URL 설정
-                        .logoutSuccessUrl("/") // 로그아웃 성공 후 리디렉션 URL 설정
-                        .deleteCookies("JSESSIONID") // 쿠키 삭제 설정
-                        .invalidateHttpSession(true) // 세션 무효화 설정
-                        .permitAll());
+                .logout((logout) -> logout
+                        .logoutUrl("/api/auth/logout")
+                        .addLogoutHandler(new LogoutHandler() {
+                            @Override
+                            public void logout(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.Authentication authentication) {
+                                Cookie[] cookies = request.getCookies();
+                                if (cookies != null) {
+                                    for (Cookie cookie : cookies) {
+                                        if (cookie.getName().equals("Authorization") ||
+                                            cookie.getName().equals("JSESSIONID") ||
+                                            cookie.getName().equals("__Host-GAPS")) {
+                                            cookie.setValue(null);
+                                            cookie.setMaxAge(0);
+                                            cookie.setPath("/");
+                                            response.addCookie(cookie);
+                                        }
+                                    }
+                                }
+                                // Invalidate the session
+                                request.getSession().invalidate();
+                            }
+                        })
+                        .logoutSuccessHandler(new LogoutSuccessHandler() {
+                            @Override
+                            public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, org.springframework.security.core.Authentication authentication) throws IOException {
+                                response.setStatus(HttpServletResponse.SC_OK);
+                                response.sendRedirect("/");
+                            }
+                        })
+                );
 
         return http.build();
     }

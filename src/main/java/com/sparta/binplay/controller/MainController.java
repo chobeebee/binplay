@@ -15,7 +15,7 @@ public class MainController {
 
     @GetMapping("/loginTest")
     @ResponseBody
-    public String loginAPI() {
+    public String loginTest() {
         return "login route";
     }
 }
