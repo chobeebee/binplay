@@ -1,46 +1,66 @@
 package com.sparta.binplay.entity;
 
+import com.sparta.binplay.dto.request.VideoRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
+import lombok.Setter;
 
 @Entity
 @Getter
-@Table(name="videos")
+@Setter
+@Table(name = "videos")
 @NoArgsConstructor
-public class Videos extends Timestamped{
+public class Videos extends Timestamped {
     @Id
     @Column(name = "video_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long videoId;
 
-    @Column(name="title", nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name="description")
+    @Column(name = "description")
     private String description;
 
-    @Column(name="views", nullable = false)
-    private Long views;
+    @Column(name = "views", nullable = false)
+    private long views;
 
-    @Column(name="video_length", nullable = false)
-    private Integer videoLength;
+    @Column(name = "video_length", nullable = false)
+    private long videoLength;
 
-    @Column(name="ad_position", nullable = false)
-    private Integer adPosition;
-
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    @OneToMany(mappedBy = "video")
-    private List<Streams> streams;
+    public Videos(String title, String description, long videoLength) {
+        this.title = title;
+        this.description = description;
+//        this.views = videoRequestDto.getViews();
+        this.videoLength = videoLength;
+        //this.user = videoRequestDto.getUser();
+    }
 
-    @OneToMany(mappedBy = "video")
-    private List<VideoAd> videoAds;
+    public static Videos of(Users user, VideoRequestDto videoRequestDto) {
+        Videos videos = new Videos();
+        videos.setUser(user);
+        videos.setTitle(videoRequestDto.getTitle());
+        videos.setDescription(videoRequestDto.getDescription());
+        videos.setVideoLength(videoRequestDto.getVideoLength());
+        return videos;
+    }
 
-    @OneToMany(mappedBy = "video")
-    private List<Statistics> statistics;
+    public void viewUp() {
+        this.views++;
+    }
+//
+//    @OneToMany(mappedBy = "videos", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Streams> streams;
+//
+//    @OneToMany(mappedBy = "videos", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<VideoAd> videoAd;
+//
+//    @OneToMany(mappedBy = "videos", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Statistics> statistics;
+
 }
