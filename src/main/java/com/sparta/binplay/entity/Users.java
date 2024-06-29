@@ -2,15 +2,17 @@ package com.sparta.binplay.entity;
 
 import com.sparta.binplay.dto.request.UserRequestDto;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.util.List;
 
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "users")
 @NoArgsConstructor
+@AllArgsConstructor
 public class Users extends Timestamped{
     @Id
     @Column(name = "user_id")
@@ -39,6 +41,9 @@ public class Users extends Timestamped{
     @Column(name="is_active", nullable = false)
     private boolean isActive;
 
+    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST, orphanRemoval = true)
+    private List<Videos> videos;
+
     public Users(UserRequestDto requestDto) {
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
@@ -46,6 +51,17 @@ public class Users extends Timestamped{
         this.grade = requestDto.getGrade();
         this.role = requestDto.getRole();
         this.isActive = requestDto.isActive();
+    }
+
+    public Users toEntity() {
+        return Users.builder()
+                .email(email)
+                .password(password)
+                .username(username)
+                .grade(grade)
+                .role(role)
+                .isActive(isActive)
+                .build();
     }
 
     public void update(UserRequestDto requestDto) {

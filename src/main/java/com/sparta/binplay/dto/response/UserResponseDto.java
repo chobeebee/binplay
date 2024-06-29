@@ -15,6 +15,8 @@ public class UserResponseDto {
     private boolean isActive;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String token;
+
 
     public UserResponseDto(Users user) {
         this.userId = user.getUserId();
@@ -25,5 +27,9 @@ public class UserResponseDto {
         this.isActive = user.isActive();
         this.createdAt = user.getCreatedAt();
         this.updatedAt = user.getUpdatedAt();
+    }
+
+    public UserResponseDto(String token) {
+        this.token = token;
     }
 }
