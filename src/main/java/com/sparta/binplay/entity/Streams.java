@@ -1,23 +1,28 @@
 package com.sparta.binplay.entity;
 
+import com.sparta.binplay.dto.request.StreamRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@Table(name="streams")
+@Table(name = "streams")
+@AllArgsConstructor
 @NoArgsConstructor
-public class Streams extends Timestamped{
+@Builder
+public class Streams extends Timestamped {
     @Id
     @Column(name = "stream_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long streamId;
 
-    @Column(name="viewing_time", nullable = false)
-    private Integer viewingTime;
+    @Column(name = "viewing_time")
+    private Long viewingTime;
 
-    @Column(name="paused_at", nullable = false)
+    @Column(name = "paused_at")
     private Integer pausedAt;
 
     @ManyToOne
@@ -27,4 +32,20 @@ public class Streams extends Timestamped{
     @ManyToOne
     @JoinColumn(name = "video_id", nullable = false)
     private Videos video;
+
+    public Streams(StreamRequestDto streamRequestDto) {
+        this.viewingTime = streamRequestDto.getViewingTime();
+        this.pausedAt = streamRequestDto.getPausedAt();
+        this.user = streamRequestDto.getUser();
+        this.video = streamRequestDto.getVideo();
+    }
+
+    public void updatePause(int stopTime) {
+        this.pausedAt = stopTime;
+    }
+
+    public void updateViewingTime(int stopTime) {
+        this.viewingTime += (long) stopTime;
+    }
+
 }
