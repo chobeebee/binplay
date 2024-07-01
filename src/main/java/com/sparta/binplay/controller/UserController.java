@@ -18,16 +18,11 @@ public class UserController {
     public String loginAPI() {
         return "login route";
     }
-//
-//    @GetMapping("/{id}")
-//    public ResponseEntity<UserResponseDto> getUser(@PathVariable @Positive Long id) {
-//        Users user = userService.findUser(id);
-//
-//        if (user == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        } else {
-//            UserResponseDto userDto = new UserResponseDto(user);
-//            return new ResponseEntity<>(userDto, HttpStatus.OK);
-//        }
+    
+//  //SecurityConfig 파일에 로그아웃 설정 됨
+//    @PostMapping("/logout")
+//    public String logoutAPI(@AuthenticationPrincipal CustomOAuth2User customUserDetails) {
+//        userService.logout(customUserDetails.getUsername());
+//        return "로그아웃 완료";
 //    }
 }

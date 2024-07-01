@@ -1,11 +1,15 @@
 package com.sparta.binplay.dto.response;
 
 import com.sparta.binplay.entity.Users;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class UserResponseDto {
     private Long userId;
     private String email;
@@ -17,16 +21,16 @@ public class UserResponseDto {
     private LocalDateTime updatedAt;
     private String token;
 
-
-    public UserResponseDto(Users user) {
-        this.userId = user.getUserId();
-        this.email = user.getEmail();
-        this.name = user.getName();
-        this.grade = user.getGrade();
-        this.role = user.getRole().toString();
-        this.isActive = user.isActive();
-        this.createdAt = user.getCreatedAt();
-        this.updatedAt = user.getUpdatedAt();
+    public static UserResponseDto from(Users user) {
+        return UserResponseDto.builder()
+                .userId(user.getUserId())
+                .email(user.getEmail())
+                .name(user.getName())
+                .grade(user.getGrade())
+                .role(String.valueOf(user.getRole()))
+                .isActive(user.isActive())
+                .createdAt(user.getCreatedAt())
+                .build();
     }
 
     public UserResponseDto(String token) {

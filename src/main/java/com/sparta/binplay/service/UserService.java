@@ -11,4 +11,8 @@ public class UserService {
     private final UserRepository userRepository;
     private final VideoRepository videoRepository;
 
+//    public void logout(String username) {
+//        Users user = userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("회원을 찾을 수 없음"));
+//    }
+
 }
