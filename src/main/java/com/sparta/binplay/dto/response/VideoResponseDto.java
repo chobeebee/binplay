@@ -19,9 +19,6 @@ public class VideoResponseDto {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    public VideoResponseDto(Videos video) {
-    }
-
     public static VideoResponseDto from(Videos video) {
         return VideoResponseDto.builder()
                 .videoId(video.getVideoId())

@@ -1,24 +1,28 @@
 package com.sparta.binplay.dto.response;
 
 import com.sparta.binplay.entity.Streams;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class StreamResponseDto  {
     private Long streamId;
-    private Long viewingTime;
-    private Integer pausedAt;
+    private int viewingTime;
+    private int pausedAt;
     private LocalDateTime createAt;
     private LocalDateTime modifiedAt;
 
-
-    public StreamResponseDto(Streams stream) {
-        this.streamId = stream.getStreamId();
-        this.viewingTime = stream.getViewingTime();
-        this.pausedAt = stream.getPausedAt();
-        this.createAt = stream.getCreatedAt();
-        this.modifiedAt = stream.getUpdatedAt();
+    public static StreamResponseDto from(Streams stream) {
+        return StreamResponseDto.builder()
+                .streamId(stream.getStreamId())
+                .viewingTime(stream.getViewingTime())
+                .pausedAt(stream.getPausedAt())
+                .createAt(stream.getCreatedAt())
+                .build();
     }
 }

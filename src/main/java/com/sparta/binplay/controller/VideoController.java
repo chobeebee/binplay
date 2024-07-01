@@ -1,9 +1,13 @@
 package com.sparta.binplay.controller;
 
 import com.sparta.binplay.dto.request.VideoRequestDto;
+import com.sparta.binplay.dto.response.StreamResponseDto;
+import com.sparta.binplay.dto.response.VideoAdResponseDto;
 import com.sparta.binplay.dto.response.VideoResponseDto;
 import com.sparta.binplay.entity.CustomOAuth2User;
 import com.sparta.binplay.entity.Videos;
+import com.sparta.binplay.service.StreamService;
+import com.sparta.binplay.service.VideoAdService;
 import com.sparta.binplay.service.VideoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +22,9 @@ import java.util.List;
 @RequestMapping("/videos")
 public class VideoController {
     private final VideoService videoService;
-    
+    private final VideoAdService videoAdService;
+    private final StreamService streamService;
+
     //모든 비디오 조회 (필요없지 않나)
     @GetMapping
     public ResponseEntity<List<Videos>> getAllVideos() {
@@ -62,15 +68,13 @@ public class VideoController {
     
     //비디오 중단
     @PostMapping("/play/{video-id}/stop") //레스풀
-    public ResponseEntity<?> videoStop(@PathVariable("video-id") Long videoId, @RequestBody int stopTime, @AuthenticationPrincipal CustomOAuth2User user) {
-        videoService.stopPosition(videoId, stopTime, user.getUsername());
-        return ResponseEntity.ok().body("");
+    public ResponseEntity<StreamResponseDto> videoStop(@PathVariable("video-id") Long videoId, @RequestBody int stopTime, @AuthenticationPrincipal CustomOAuth2User user) {
+        return ResponseEntity.ok().body(streamService.stopPosition(videoId, stopTime, user.getUsername()));
     }
     
     //광고 시청
     @PostMapping("/play/ads/{ad-id}")
-    public ResponseEntity<?> viewAd(@PathVariable("ad-id") Long adId, @RequestBody Long videoId) {
-        videoService.updateAdCount(adId, videoId);
-        return ResponseEntity.ok().body("");
+    public ResponseEntity<VideoAdResponseDto> viewAd(@PathVariable("ad-id") Long adId, @RequestBody Long videoId) {
+        return ResponseEntity.ok().body(videoAdService.updateAdCount(adId, videoId));
     }
 }

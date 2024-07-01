@@ -20,10 +20,10 @@ public class Streams extends Timestamped {
     private Long streamId;
 
     @Column(name = "viewing_time")
-    private Long viewingTime;
+    private int viewingTime;
 
     @Column(name = "paused_at")
-    private Integer pausedAt;
+    private int pausedAt;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -45,7 +45,7 @@ public class Streams extends Timestamped {
     }
 
     public void updateViewingTime(int stopTime) {
-        this.viewingTime += (long) stopTime;
+        this.viewingTime += stopTime;
     }
 
 }

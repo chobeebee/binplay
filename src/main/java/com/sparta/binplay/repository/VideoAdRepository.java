@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface VideoAdRepository extends JpaRepository<VideoAd, Long> {
-    Optional<VideoAd> findByVideosAndAds(Videos videos, Ads ads);
+    Optional<VideoAd> findByVideoAndAd(Videos video, Ads ad);
 }
