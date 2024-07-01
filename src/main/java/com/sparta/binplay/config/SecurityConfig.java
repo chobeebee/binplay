@@ -17,8 +17,11 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+import org.springframework.web.cors.CorsConfiguration;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -36,6 +39,25 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        // CORS 설정
+        http
+                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
+
+                    CorsConfiguration configuration = new CorsConfiguration();
+
+                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                    configuration.setAllowedMethods(Collections.singletonList("*"));
+                    configuration.setAllowCredentials(true);
+                    configuration.setAllowedHeaders(Collections.singletonList("*"));
+                    configuration.setMaxAge(3600L);
+
+//                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
+//                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
+
+                    configuration.setExposedHeaders(Arrays.asList("Set-Cookie","Authorization"));
+
+                    return configuration;
+                }));
 
         //csrf disable
         http
@@ -74,23 +96,6 @@ public class SecurityConfig {
         http
                 .sessionManagement((session) -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        // CORS 설정
-//        http
-//                .cors(corsCustomizer -> corsCustomizer.configurationSource(request -> {
-//
-//                    CorsConfiguration configuration = new CorsConfiguration();
-//
-//                    configuration.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-//                    configuration.setAllowedMethods(Collections.singletonList("*"));
-//                    configuration.setAllowCredentials(true);
-//                    configuration.setAllowedHeaders(Collections.singletonList("*"));
-//                    configuration.setMaxAge(3600L);
-//
-//                    configuration.setExposedHeaders(Collections.singletonList("Set-Cookie"));
-//                    configuration.setExposedHeaders(Collections.singletonList("Authorization"));
-//
-//                    return configuration;
-//                }));
 
          //로그아웃 설정
         http

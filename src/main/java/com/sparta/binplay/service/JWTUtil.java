@@ -37,7 +37,7 @@
             return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getExpiration().before(new Date());
         }
 
-        public String createJwt(String username, String role, Long expiredMs) {
+        public String createJwt(String username, String role, int expiredMs) {
 
             Claims claims = Jwts.claims();
             claims.put("username", username);
