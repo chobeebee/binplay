@@ -17,6 +17,9 @@ configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
 	}
+	all {
+		exclude group: 'commons-logging', module: 'commons-logging'
+	}
 }
 
 repositories {
@@ -52,6 +55,11 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 
 	implementation 'org.springframework.boot:spring-boot-starter'
+
+	//Spring Batch
+	implementation 'org.springframework.boot:spring-boot-starter-batch'
+	//implementation'org.springframework.boot:spring-boot-starter-quartz'
+	testImplementation 'org.springframework.batch:spring-batch-test'
 }
 
 tasks.named('test') {
