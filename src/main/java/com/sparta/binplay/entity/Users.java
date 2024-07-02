@@ -41,7 +41,7 @@ public class Users extends Timestamped{
     @Column(name="is_active", nullable = false)
     private boolean isActive;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @OneToMany(mappedBy = "user")
     private List<Videos> videos;
 
     public Users(UserRequestDto requestDto) {

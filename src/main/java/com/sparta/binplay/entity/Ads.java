@@ -13,8 +13,4 @@ public class Ads extends Timestamped{
     @Column(name = "ad_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adId;
-
-    @ManyToOne
-    @JoinColumn(name = "video_id", nullable = false)
-    private Videos video;
 }
