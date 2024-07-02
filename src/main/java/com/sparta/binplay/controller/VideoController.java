@@ -32,28 +32,29 @@ public class VideoController {
         return ResponseEntity.ok(videos);
     }
 
-    // my동영상 리스트 조회
+    // my비디오 리스트 조회
     @GetMapping("/my")
     public ResponseEntity<List<VideoResponseDto>> getMyVideos() throws Exception {
         List<VideoResponseDto> videos = videoService.getVideoList();
         return ResponseEntity.status(HttpStatus.OK).body(videos);
     }
 
-    //동영상 등록
+    //비디오 등록
     @PostMapping("/create")
     public ResponseEntity<VideoResponseDto> createVideo(@RequestBody VideoRequestDto videoRequestDto) throws Exception {
         VideoResponseDto videoResponseDto = videoService.createVideo(videoRequestDto);
+        videoService.matchAd(videoRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(videoResponseDto);
     }
 
-    //동영상 수정
+    //비디오 수정
     @PutMapping("/update/{videoId}")    // http://localhost:8080/videos/update/1
     public ResponseEntity<VideoResponseDto> updateVideo(@PathVariable Long videoId, @RequestBody VideoRequestDto videoRequestDto) throws Exception {
         VideoResponseDto videoResponseDto = videoService.updateVideo(videoId,videoRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(videoResponseDto);
     }
 
-    //동영상 삭제
+    //비디오 삭제
     @DeleteMapping("/delete/{videoId}")
     public String deleteVideo(@PathVariable Long videoId) throws Exception{
         videoService.deleteVideo(videoId);

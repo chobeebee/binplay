@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,16 +35,20 @@ public class Videos extends Timestamped {
     @Column(name = "video_length", nullable = false)
     private long videoLength;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private Users user;
 
-    @OneToMany(mappedBy = "video", cascade = CascadeType.PERSIST,orphanRemoval = true)
-    private List<Streams> streams;
+    @Builder.Default
+    @OneToMany(mappedBy = "video")
+    private List<Streams> streams = new ArrayList<>();
 
-    @OneToMany(mappedBy = "video", cascade = CascadeType.PERSIST,orphanRemoval = true)
-    private List<VideoAd> videoAd;
-
+    @Builder.Default
+    @OneToMany(mappedBy = "video")
+    private List<VideoAd> videoAd = new ArrayList<>();
+//
+//    @OneToMany(mappedBy = "videos")
+//    private List<Statistics> statistics = new ArrayList<>();
 
     public Videos(String title, String description, long videoLength) {
         this.title = title;
@@ -72,9 +77,11 @@ public class Videos extends Timestamped {
         this.views++;
     }
 
+    public void addVideoAd(VideoAd videoAd) {
+        this.videoAd.add(videoAd);
+    }
 
-//
-//    @OneToMany(mappedBy = "videos", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Statistics> statistics;
+
+
 
 }

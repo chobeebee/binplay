@@ -20,7 +20,7 @@ public class VideoAd {
     private Long videoAdId;
 
     @Column(name = "ad_views")
-    private Long adViews = 0L;
+    private Long adViews;
 
     @ManyToOne
     @JoinColumn(name = "video_id", nullable = false)

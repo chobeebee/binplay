@@ -21,7 +21,7 @@ public class VideoAdService {
     public VideoAdResponseDto updateAdCount(Long adId, Long videoId) {
         Ads ad = adRepository.findById(adId).orElseThrow(() -> new RuntimeException("광고를 찾을 수 없음"));
         Videos video = videoRepository.findById(videoId).orElseThrow(() -> new RuntimeException("비디오를 찾을 수 없음"));
-        VideoAd videoAd = videoAdRepository.findByVideoAndAd(video, ad).orElse(VideoAd.builder() //joincolumn 고칠것!!!
+        VideoAd videoAd = videoAdRepository.findByVideoAndAd(video, ad).orElse(VideoAd.builder()
                 .ad(ad)
                 .video(video)
                 .build());
