@@ -45,7 +45,13 @@ public class Streams extends Timestamped {
     }
 
     public void updateViewingTime(int stopTime) {
-        this.viewingTime += stopTime;
+
+        this.viewingTime+= (stopTime - this.viewingTime);
+
+        //영상을 끝까지 봤다면 영상 처음으로 돌림
+        if(this.viewingTime == video.getVideoLength()) {
+            this.viewingTime = 0;
+        }
     }
 
 }
