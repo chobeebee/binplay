@@ -74,8 +74,8 @@ public class VideoController {
     }
     
     //광고 시청
-    @PostMapping("/play/ads/{ad-id}")
-    public ResponseEntity<VideoAdResponseDto> viewAd(@PathVariable("ad-id") Long adId, @RequestBody Long videoId) {
-        return ResponseEntity.ok().body(videoAdService.updateAdCount(adId, videoId));
+    @PostMapping("/play/ads/{video-ad-id}")
+    public ResponseEntity<VideoAdResponseDto> viewAd(@PathVariable("video-ad-id") Long videoAdId) {
+        return ResponseEntity.ok().body(videoAdService.updateAdCount(videoAdId));
     }
 }
