@@ -46,16 +46,19 @@ public class Videos extends Timestamped {
     @Builder.Default
     @OneToMany(mappedBy = "video")
     private List<VideoAd> videoAd = new ArrayList<>();
-//
-//    @OneToMany(mappedBy = "videos")
-//    private List<Statistics> statistics = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "video")
+    private List<StatisticVideo> statisticsVideo = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "video")
+    private List<PaymentVideo> paymentsVideo = new ArrayList<>();
 
     public Videos(String title, String description, long videoLength) {
         this.title = title;
         this.description = description;
-//        this.views = videoRequestDto.getViews();
         this.videoLength = videoLength;
-        //this.user = videoRequestDto.getUser();
     }
 
     public static Videos of(Users user, VideoRequestDto videoRequestDto) {
@@ -80,8 +83,4 @@ public class Videos extends Timestamped {
     public void addVideoAd(VideoAd videoAd) {
         this.videoAd.add(videoAd);
     }
-
-
-
-
 }

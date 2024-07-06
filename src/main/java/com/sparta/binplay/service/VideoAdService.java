@@ -19,7 +19,6 @@ public class VideoAdService {
     public VideoAdResponseDto updateAdCount(Long videoAdId) {
         VideoAd videoAd = videoAdRepository.findById(videoAdId).orElseThrow(() -> new RuntimeException("영상을 찾을 수 없습니다."));
 
-        videoAd.countAd();
         videoAdRepository.save(videoAd);
 
         return VideoAdResponseDto.from(videoAd);

@@ -1,5 +1,6 @@
 package com.sparta.binplay.controller;
 
+import com.sparta.binplay.dto.request.StreamRequestDto;
 import com.sparta.binplay.dto.request.VideoRequestDto;
 import com.sparta.binplay.dto.response.StreamResponseDto;
 import com.sparta.binplay.dto.response.VideoAdResponseDto;
@@ -63,8 +64,8 @@ public class VideoController {
     
     //비디오 재생
     @PostMapping("/play/{video-id}") //<?> : hidden
-    public ResponseEntity<VideoResponseDto> videoPlay(@PathVariable("video-id") Long videoId, @AuthenticationPrincipal CustomOAuth2User user){
-        return ResponseEntity.ok().body(videoService.play(videoId, user.getUsername()));
+    public ResponseEntity<StreamResponseDto> videoPlay(@PathVariable("video-id") Long videoId, @AuthenticationPrincipal CustomOAuth2User user, @RequestBody StreamRequestDto streamRequestDto) {
+        return ResponseEntity.ok().body(streamService.play(videoId, user.getUsername(),streamRequestDto));
     }
     
     //비디오 중단

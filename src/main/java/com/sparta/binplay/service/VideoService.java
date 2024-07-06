@@ -19,16 +19,16 @@ import java.util.stream.Collectors;
 public class VideoService {
     private final VideoRepository videoRepository;
     private final UserRepository userRepository;
-    private final StreamRepository streamRepository;
     private final AdRepository adRepository;
+    private final AdViewRepository adViewRepository;
     private final VideoAdRepository videoAdRepository;
-
 
     //모든
     public List<Videos> findAllVideos() {
         return videoRepository.findAll();
     }
 
+    //회원 찾기
     private Users getAuthenticatedUser() throws Exception {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomOAuth2User customUserDetails = (CustomOAuth2User) authentication.getPrincipal();
@@ -46,12 +46,13 @@ public class VideoService {
         return VideoResponseDto.from(saveVideo);
     }
 
+    @Transactional
     public void matchAd(VideoRequestDto videoRequestDto) throws Exception {
         Users user = getAuthenticatedUser();
-        Videos saveVideo = videoRepository.save(Videos.of(user, videoRequestDto));
+        Videos savedVideo = videoRepository.save(Videos.of(user, videoRequestDto));
 
         // 광고 개수 계산 및 저장
-        int numberOfAds = (int) (saveVideo.getVideoLength() / (5 * 60)); // 5분마다 1개의 광고 (5분 = 300초)
+        int numberOfAds = (int) (savedVideo.getVideoLength() / (5 * 60)); // 5분마다 1개의 광고 (5분 = 300초)
         List<Ads> adsList = adRepository.findAll();
 
         Random random = new Random();
@@ -60,14 +61,24 @@ public class VideoService {
             int randomAdIndex = random.nextInt(adsList.size());
             Ads ad = adsList.get(randomAdIndex);
 
+            // AdViews 생성
+            AdViews adView = new AdViews();
+            AdViews savedAdView = adViewRepository.save(adView);
+
+            // VideoAd 생성 및 저장
             VideoAd videoAd = VideoAd.builder()
                     .ad(ad)
-                    .adViews(0L)
-                    .video(saveVideo)
+                    .viewCount(0)
+                    .video(savedVideo)
+                    .stat_is(false)
+                    .adView(savedAdView)
                     .build();
 
-            // videoAd를 저장
-            videoAdRepository.save(videoAd);
+            VideoAd savedVideoAd = videoAdRepository.save(videoAd);
+
+            // AdViews와 VideoAd 연결
+            savedAdView.setVideoAd(savedVideoAd);
+            adViewRepository.save(savedAdView);
         }
     }
 
@@ -86,7 +97,7 @@ public class VideoService {
     @Transactional
     public VideoResponseDto updateVideo(Long videoId, VideoRequestDto videoRequestDto) throws Exception {
         Users user = getAuthenticatedUser(); //권한
-        Videos video = videoRepository.findByVideoId(videoId);
+        Videos video = videoRepository.findByVideoId(videoId).orElseThrow(() -> new RuntimeException("비디오를 찾을 수 없음"));
 
         video.update(videoRequestDto);
         videoRepository.save(video);
@@ -96,30 +107,26 @@ public class VideoService {
 
     // 비디오 삭제
     @Transactional
-    public void deleteVideo(Long videoId) {
-        Videos video = getVideos(videoId);
-        Users user = video.getUser();
-        user.getVideos().remove(video); // User의 비디오 리스트에서 비디오 제거
-        videoRepository.delete(video);
+    public void deleteVideo(Long videoId) throws Exception {
+//        Videos video = videoRepository.findById(videoId)
+//                .orElseThrow(() -> new Exception("Video not found"));
+//
+//        // VideoAd 엔티티의 관계를 해제
+//        List<VideoAd> videoAds = videoAdRepository.findByVideo(video);
+//        for (VideoAd videoAd : videoAds) {
+//            AdViews adView = videoAd.getAdViews();
+//            if (adView != null) {
+//                adView.setVideoAd(null);  // 관계 해제
+//                adViewRepository.delete(adView);
+//            }
+//            videoAdRepository.delete(videoAd);
+//        }
+//
+//        // Video 엔티티 삭제
+//        videoRepository.delete(video);
     }
 
-    // 비디오 재생 조회수
-    @Transactional
-    public VideoResponseDto play(Long videoId, String username) {
-
-        Videos videos = getVideos(videoId);
-        Users uploadUser = videos.getUser();
-        Users watchUser = getByUsername(username);
-        boolean matchUser = uploadUser.getUserId().equals(watchUser.getUserId()); //어뷰징에 사용
-
-        if (!matchUser) {
-            videos.viewUp();
-        }
-
-        return VideoResponseDto.from(videos);
-    }
-
-    //회원 찾기 //ifpresent?
+    //회원 찾기
     private Users getByUsername(String username) {
         return userRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("회원을 찾을 수 없음"));
     }
