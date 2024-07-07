@@ -16,7 +16,6 @@ public class VideoAdResponseDto {
     public static VideoAdResponseDto from(VideoAd videoAd) {
         return VideoAdResponseDto.builder()
                 .videoAdId(videoAd.getVideoAdId())
-                .adViews(videoAd.getAdView())
                 .build();
     }
 }

@@ -2,11 +2,12 @@ package com.sparta.binplay.controller;
 
 import com.sparta.binplay.dto.request.StreamRequestDto;
 import com.sparta.binplay.dto.request.VideoRequestDto;
+import com.sparta.binplay.dto.response.AdViewResponseDto;
 import com.sparta.binplay.dto.response.StreamResponseDto;
-import com.sparta.binplay.dto.response.VideoAdResponseDto;
 import com.sparta.binplay.dto.response.VideoResponseDto;
 import com.sparta.binplay.entity.CustomOAuth2User;
 import com.sparta.binplay.entity.Videos;
+import com.sparta.binplay.service.AdViewService;
 import com.sparta.binplay.service.StreamService;
 import com.sparta.binplay.service.VideoAdService;
 import com.sparta.binplay.service.VideoService;
@@ -25,6 +26,7 @@ public class VideoController {
     private final VideoService videoService;
     private final VideoAdService videoAdService;
     private final StreamService streamService;
+    private final AdViewService adViewService;
 
     //모든 비디오 조회 (필요없지 않나)
     @GetMapping
@@ -44,7 +46,7 @@ public class VideoController {
     @PostMapping("/create")
     public ResponseEntity<VideoResponseDto> createVideo(@RequestBody VideoRequestDto videoRequestDto) throws Exception {
         VideoResponseDto videoResponseDto = videoService.createVideo(videoRequestDto);
-        videoService.matchAd(videoRequestDto);
+        //videoService.matchAd(videoRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(videoResponseDto);
     }
 
@@ -73,10 +75,10 @@ public class VideoController {
     public ResponseEntity<StreamResponseDto> videoStop(@PathVariable("video-id") Long videoId, @RequestBody int stopTime, @AuthenticationPrincipal CustomOAuth2User user) {
         return ResponseEntity.ok().body(streamService.stopPosition(videoId, stopTime, user.getUsername()));
     }
-    
+
     //광고 시청
     @PostMapping("/play/ads/{video-ad-id}")
-    public ResponseEntity<VideoAdResponseDto> viewAd(@PathVariable("video-ad-id") Long videoAdId) {
-        return ResponseEntity.ok().body(videoAdService.updateAdCount(videoAdId));
+    public ResponseEntity<AdViewResponseDto> viewAd(@PathVariable("video-ad-id") Long videoAdId) {
+        return ResponseEntity.ok().body(adViewService.saveAdView(videoAdId));
     }
 }

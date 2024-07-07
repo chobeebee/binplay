@@ -1,5 +1,6 @@
 package com.sparta.binplay.entity;
 
+import com.sparta.binplay.dto.request.VideoAdRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +24,7 @@ public class VideoAd {
     private long viewCount;
 
     @Column(name="stat_is")
-    private boolean stat_is;
+    private boolean statIs;
 
     @ManyToOne
     @JoinColumn(name = "video_id", nullable = false)
@@ -33,20 +34,19 @@ public class VideoAd {
     @JoinColumn(name = "ad_id", nullable = false)
     private Ads ad;
 
-    @ManyToOne
-    @JoinColumn(name = "ad_view_id", nullable = false)
-    private AdViews adView;
-
-    // 생성자
-    public VideoAd(Ads ad, Videos video, int viewCount, boolean stat_is, AdViews adView) {
+    public VideoAd(Ads ad, Videos video, int viewCount, boolean statIs) {
         this.ad = ad;
         this.video = video;
         this.viewCount = viewCount;
-        this.stat_is = stat_is;
-        this.adView = adView;
+        this.statIs = statIs;
     }
 
-    public void setAdView(AdViews adView) {
-        this.adView = adView;
+    public static VideoAd of(VideoAdRequestDto videoAdRequestDto) {
+        return VideoAd.builder()
+                .ad(videoAdRequestDto.getAd())
+                .viewCount(videoAdRequestDto.getViewCount())
+                .video(videoAdRequestDto.getVideo())
+                .statIs(videoAdRequestDto.isStatIs())
+                .build();
     }
 }

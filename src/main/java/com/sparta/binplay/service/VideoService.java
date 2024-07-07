@@ -1,5 +1,6 @@
 package com.sparta.binplay.service;
 
+import com.sparta.binplay.dto.request.VideoAdRequestDto;
 import com.sparta.binplay.dto.request.VideoRequestDto;
 import com.sparta.binplay.dto.response.VideoResponseDto;
 import com.sparta.binplay.entity.*;
@@ -43,10 +44,33 @@ public class VideoService {
         // Videos 엔티티를 먼저 저장
         Videos saveVideo = videoRepository.save(Videos.of(user, videoRequestDto));
 
+        // 광고 개수 계산 및 저장
+        int numberOfAds = (int) (saveVideo.getVideoLength() / (5 * 60)); // 5분마다 1개의 광고 (5분 = 300초)
+        List<Ads> adsList = adRepository.findAll();
+
+        Random random = new Random();
+
+        for (int i = 0; i < numberOfAds; i++) {
+            int randomAdIndex = random.nextInt(adsList.size());
+            Ads ad = adsList.get(randomAdIndex);
+
+            // VideoAdRequestDto 생성
+            VideoAdRequestDto videoAdRequestDto = VideoAdRequestDto.builder()
+                    .ad(ad)
+                    .viewCount(0)
+                    .video(saveVideo)
+                    .statIs(false)
+                    .build();
+
+            // VideoAd 생성 및 저장
+            VideoAd videoAd = VideoAd.of(videoAdRequestDto);
+            VideoAd savedVideoAd = videoAdRepository.save(videoAd);
+        }
+
         return VideoResponseDto.from(saveVideo);
     }
 
-    @Transactional
+    /*@Transactional
     public void matchAd(VideoRequestDto videoRequestDto) throws Exception {
         Users user = getAuthenticatedUser();
         Videos savedVideo = videoRepository.save(Videos.of(user, videoRequestDto));
@@ -61,26 +85,29 @@ public class VideoService {
             int randomAdIndex = random.nextInt(adsList.size());
             Ads ad = adsList.get(randomAdIndex);
 
-            // AdViews 생성
-            AdViews adView = new AdViews();
-            AdViews savedAdView = adViewRepository.save(adView);
-
-            // VideoAd 생성 및 저장
-            VideoAd videoAd = VideoAd.builder()
+            // VideoAdRequestDto 생성
+            VideoAdRequestDto videoAdRequestDto = VideoAdRequestDto.builder()
                     .ad(ad)
                     .viewCount(0)
                     .video(savedVideo)
-                    .stat_is(false)
-                    .adView(savedAdView)
+                    .statIs(false)
                     .build();
 
+            // VideoAd 생성 및 저장
+            VideoAd videoAd = VideoAd.of(videoAdRequestDto);
             VideoAd savedVideoAd = videoAdRepository.save(videoAd);
 
-            // AdViews와 VideoAd 연결
-            savedAdView.setVideoAd(savedVideoAd);
-            adViewRepository.save(savedAdView);
+            // AdViewsRequestDto 생성
+            AdViewRequestDto adViewsRequestDto = AdViewRequestDto.builder()
+                    .createdAt(LocalDate.now()) // 예시로 현재 날짜 사용
+                    .videoAd(savedVideoAd)
+                    .build();
+
+            // AdViews 생성 및 저장
+            AdViews adView = AdViews.of(adViewsRequestDto);
+            AdViews saveAdView = adViewRepository.save(adView);
         }
-    }
+    }*/
 
     //비디오 조회
     public List<VideoResponseDto> getVideoList() throws Exception {
@@ -108,22 +135,13 @@ public class VideoService {
     // 비디오 삭제
     @Transactional
     public void deleteVideo(Long videoId) throws Exception {
-//        Videos video = videoRepository.findById(videoId)
-//                .orElseThrow(() -> new Exception("Video not found"));
-//
-//        // VideoAd 엔티티의 관계를 해제
-//        List<VideoAd> videoAds = videoAdRepository.findByVideo(video);
-//        for (VideoAd videoAd : videoAds) {
-//            AdViews adView = videoAd.getAdViews();
-//            if (adView != null) {
-//                adView.setVideoAd(null);  // 관계 해제
-//                adViewRepository.delete(adView);
-//            }
-//            videoAdRepository.delete(videoAd);
-//        }
-//
-//        // Video 엔티티 삭제
-//        videoRepository.delete(video);
+        Videos video = getVideos(videoId);
+        Users user = video.getUser();
+        user.getVideos().remove(video); // User의 비디오 리스트에서 비디오 제거
+        videoRepository.delete(video);
+
+        // Video 엔티티 삭제
+        videoRepository.delete(video);
     }
 
     //회원 찾기
