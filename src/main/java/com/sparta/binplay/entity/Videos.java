@@ -33,7 +33,7 @@ public class Videos extends Timestamped {
     private long views;
 
     @Column(name = "video_length", nullable = false)
-    private long videoLength;
+    private int videoLength;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -55,7 +55,7 @@ public class Videos extends Timestamped {
     @OneToMany(mappedBy = "video")
     private List<PaymentVideo> paymentsVideo = new ArrayList<>();
 
-    public Videos(String title, String description, long videoLength) {
+    public Videos(String title, String description, int videoLength) {
         this.title = title;
         this.description = description;
         this.videoLength = videoLength;

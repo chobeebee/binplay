@@ -6,7 +6,6 @@ import com.sparta.binplay.dto.response.AdViewResponseDto;
 import com.sparta.binplay.dto.response.StreamResponseDto;
 import com.sparta.binplay.dto.response.VideoResponseDto;
 import com.sparta.binplay.entity.CustomOAuth2User;
-import com.sparta.binplay.entity.Videos;
 import com.sparta.binplay.service.AdViewService;
 import com.sparta.binplay.service.StreamService;
 import com.sparta.binplay.service.VideoAdService;
@@ -29,11 +28,11 @@ public class VideoController {
     private final AdViewService adViewService;
 
     //모든 비디오 조회 (필요없지 않나)
-    @GetMapping
+    /*@GetMapping
     public ResponseEntity<List<Videos>> getAllVideos() {
         List<Videos> videos = videoService.findAllVideos();
         return ResponseEntity.ok(videos);
-    }
+    }*/
 
     // my비디오 리스트 조회
     @GetMapping("/my")

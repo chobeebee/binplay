@@ -12,15 +12,14 @@ import java.time.LocalDateTime;
 @Builder
 public class StreamResponseDto  {
     private Long streamId;
-    private int viewingTime;
+    private int playTime;
     private int pausedAt;
     private LocalDateTime createAt;
-    private LocalDateTime modifiedAt;
 
     public static StreamResponseDto from(Streams stream) {
         return StreamResponseDto.builder()
                 .streamId(stream.getStreamId())
-                .viewingTime(stream.getViewingTime())
+                .playTime(stream.getPlayTime())
                 .pausedAt(stream.getPausedAt())
                 .createAt(stream.getCreatedAt())
                 .build();

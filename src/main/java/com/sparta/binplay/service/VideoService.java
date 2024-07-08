@@ -70,45 +70,6 @@ public class VideoService {
         return VideoResponseDto.from(saveVideo);
     }
 
-    /*@Transactional
-    public void matchAd(VideoRequestDto videoRequestDto) throws Exception {
-        Users user = getAuthenticatedUser();
-        Videos savedVideo = videoRepository.save(Videos.of(user, videoRequestDto));
-
-        // 광고 개수 계산 및 저장
-        int numberOfAds = (int) (savedVideo.getVideoLength() / (5 * 60)); // 5분마다 1개의 광고 (5분 = 300초)
-        List<Ads> adsList = adRepository.findAll();
-
-        Random random = new Random();
-
-        for (int i = 0; i < numberOfAds; i++) {
-            int randomAdIndex = random.nextInt(adsList.size());
-            Ads ad = adsList.get(randomAdIndex);
-
-            // VideoAdRequestDto 생성
-            VideoAdRequestDto videoAdRequestDto = VideoAdRequestDto.builder()
-                    .ad(ad)
-                    .viewCount(0)
-                    .video(savedVideo)
-                    .statIs(false)
-                    .build();
-
-            // VideoAd 생성 및 저장
-            VideoAd videoAd = VideoAd.of(videoAdRequestDto);
-            VideoAd savedVideoAd = videoAdRepository.save(videoAd);
-
-            // AdViewsRequestDto 생성
-            AdViewRequestDto adViewsRequestDto = AdViewRequestDto.builder()
-                    .createdAt(LocalDate.now()) // 예시로 현재 날짜 사용
-                    .videoAd(savedVideoAd)
-                    .build();
-
-            // AdViews 생성 및 저장
-            AdViews adView = AdViews.of(adViewsRequestDto);
-            AdViews saveAdView = adViewRepository.save(adView);
-        }
-    }*/
-
     //비디오 조회
     public List<VideoResponseDto> getVideoList() throws Exception {
         Users user = getAuthenticatedUser();

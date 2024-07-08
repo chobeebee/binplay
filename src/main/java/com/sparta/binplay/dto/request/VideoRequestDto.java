@@ -9,9 +9,9 @@ public class VideoRequestDto {
     private Long videoId;
     private String title;
     private String description;
-    private long videoLength;
+    private int videoLength;
 
-    public VideoRequestDto(Long videoId, String title, String description, long videoLength) {
+    public VideoRequestDto(Long videoId, String title, String description, int videoLength) {
         this.videoId = videoId;
         this.title = title;
         this.description = description;

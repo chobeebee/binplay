@@ -44,30 +44,13 @@ public class Users extends Timestamped{
     @OneToMany(mappedBy = "user")
     private List<Videos> videos;
 
+    @OneToMany(mappedBy = "user")
+    private List<Streams> streams;
+
     public Users(UserRequestDto requestDto) {
         this.email = requestDto.getEmail();
         this.password = requestDto.getPassword();
         this.username = requestDto.getName();
-        this.grade = requestDto.getGrade();
-        this.role = requestDto.getRole();
-        this.isActive = requestDto.isActive();
-    }
-
-    public Users toEntity() {
-        return Users.builder()
-                .email(email)
-                .password(password)
-                .username(username)
-                .grade(grade)
-                .role(role)
-                .isActive(isActive)
-                .build();
-    }
-
-    public void update(UserRequestDto requestDto) {
-        this.email = requestDto.getEmail();
-        this.password = requestDto.getPassword();
-        this.name = requestDto.getName();
         this.grade = requestDto.getGrade();
         this.role = requestDto.getRole();
         this.isActive = requestDto.isActive();
