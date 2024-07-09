@@ -1,9 +1,9 @@
 package com.sparta.binplay.dto.response;
 
-import com.sparta.binplay.entity.StatisticVideo;
+import com.sparta.binplay.entity.statistic.StatisticVideo;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -11,14 +11,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class StatisticVideoResponseDto {
-    private Long statVideoId;
     private long dailyViewCount;
     private int dailyPlayTime;
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     public static StatisticVideoResponseDto from(StatisticVideo statisticVideo) {
         return StatisticVideoResponseDto.builder()
-                .statVideoId(statisticVideo.getStatVideoId())
                 .dailyViewCount(statisticVideo.getDailyViewCount())
                 .dailyPlayTime(statisticVideo.getDailyPlayTime())
                 .createdAt(statisticVideo.getCreatedAt())
