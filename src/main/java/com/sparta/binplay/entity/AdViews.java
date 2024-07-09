@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -32,12 +31,6 @@ public class AdViews {
     @JoinColumn(name = "video_ad_id")
     private VideoAd videoAd;
 
-    @OneToMany(mappedBy = "adView")
-    private Set<StatisticAd> statisticsAds;
-
-    @OneToMany(mappedBy = "adView")
-    private Set<PaymentAd> paymentsAds;
-
     public AdViews(LocalDate createdAt, VideoAd videoAd) {
         this.createdAt = createdAt;
         this.videoAd = videoAd;
@@ -50,4 +43,8 @@ public class AdViews {
                 .build();
     }
 
+    @Transient
+    public Videos getVideo() {
+        return this.videoAd.getVideo();
+    }
 }
