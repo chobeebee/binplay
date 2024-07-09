@@ -7,8 +7,8 @@ public class StreamRequestDto {
     private int playTime;
     private int pausedAt;
 
-    public StreamRequestDto(int viewingTime) {
-        this.playTime = viewingTime;
+    public StreamRequestDto(int playTime, int pausedAt) {
+        this.playTime = playTime;
         this.pausedAt = pausedAt;
     }
 
