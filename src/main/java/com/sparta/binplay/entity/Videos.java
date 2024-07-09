@@ -1,6 +1,8 @@
 package com.sparta.binplay.entity;
 
 import com.sparta.binplay.dto.request.VideoRequestDto;
+import com.sparta.binplay.entity.payment.PaymentVideo;
+import com.sparta.binplay.entity.statistic.StatisticVideo;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,8 +31,8 @@ public class Videos extends Timestamped {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "views", nullable = false)
-    private long views;
+    @Column(name = "views_count", nullable = false)
+    private long viewCount;
 
     @Column(name = "video_length", nullable = false)
     private int videoLength;
@@ -77,7 +79,7 @@ public class Videos extends Timestamped {
     }
 
     public void viewUp() {
-        this.views++;
+        this.viewCount++;
     }
 
     public void addVideoAd(VideoAd videoAd) {

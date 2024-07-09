@@ -14,7 +14,7 @@ public class VideoResponseDto {
     private Long videoId;
     private String title;
     private String description;
-    private long views;
+    private long viewCount;
     private long videoLength;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
@@ -24,7 +24,7 @@ public class VideoResponseDto {
                 .videoId(video.getVideoId())
                 .title(video.getTitle())
                 .description(video.getDescription())
-                .views(video.getViews())
+                .viewCount(video.getViewCount())
                 .videoLength(video.getVideoLength())
                 .createdAt(video.getCreatedAt())
                 .build();
