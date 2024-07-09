@@ -2,8 +2,8 @@ package com.sparta.binplay.config;
 
 import com.sparta.binplay.jwt.JWTFilter;
 import com.sparta.binplay.oauth2.CustomSuccessHandler;
-import com.sparta.binplay.service.CustomOAuth2UserService;
-import com.sparta.binplay.service.JWTUtil;
+import com.sparta.binplay.oauth2.CustomOAuth2UserService;
+import com.sparta.binplay.jwt.JWTUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

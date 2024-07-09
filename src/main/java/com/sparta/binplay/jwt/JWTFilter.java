@@ -3,7 +3,6 @@ package com.sparta.binplay.jwt;
 import com.sparta.binplay.dto.UserDTO;
 import com.sparta.binplay.entity.CustomOAuth2User;
 import com.sparta.binplay.entity.Role;
-import com.sparta.binplay.service.JWTUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

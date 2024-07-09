@@ -1,4 +1,4 @@
-package com.sparta.binplay.service;
+package com.sparta.binplay.oauth2;
 
 import com.sparta.binplay.dto.UserDTO;
 import com.sparta.binplay.dto.response.GoogleResponse;

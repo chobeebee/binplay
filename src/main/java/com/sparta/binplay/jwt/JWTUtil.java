@@ -1,4 +1,4 @@
-    package com.sparta.binplay.service;
+    package com.sparta.binplay.jwt;
 
     import io.jsonwebtoken.Claims;
     import io.jsonwebtoken.Jwts;

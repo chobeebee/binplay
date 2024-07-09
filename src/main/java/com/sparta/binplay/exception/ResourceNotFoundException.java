@@ -1,4 +1,4 @@
-package com.sparta.binplay.service;
+package com.sparta.binplay.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

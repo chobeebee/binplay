@@ -1,7 +1,7 @@
 package com.sparta.binplay.oauth2;
 
 import com.sparta.binplay.entity.CustomOAuth2User;
-import com.sparta.binplay.service.JWTUtil;
+import com.sparta.binplay.jwt.JWTUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
