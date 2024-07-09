@@ -1,6 +1,6 @@
 package com.sparta.binplay.repository;
 
-import com.sparta.binplay.entity.PaymentVideo;
+import com.sparta.binplay.entity.payment.PaymentVideo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

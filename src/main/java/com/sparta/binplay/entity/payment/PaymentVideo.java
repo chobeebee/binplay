@@ -1,29 +1,33 @@
-package com.sparta.binplay.entity;
+package com.sparta.binplay.entity.payment;
 
+import com.sparta.binplay.entity.Videos;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
-@Table(name="payments_video")
+@Table(name="payment_video")
+@AllArgsConstructor
 @NoArgsConstructor
-public class PaymentVideo extends Timestamped{
-    @Id
-    @Column(name="payment_video_id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long paymentVideoId;
+@Builder
+@IdClass(PaymentVideoId.class)
+public class PaymentVideo {
 
     @Column(name="total_amount", nullable = false)
     private Double totalAmount;
 
+    @Id
     @CreatedDate
     @Column(name="created_at", updatable = false) //업데이트를 막음
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
+    @Id
     @ManyToOne
     @JoinColumn(name = "video_id")
     private Videos video;

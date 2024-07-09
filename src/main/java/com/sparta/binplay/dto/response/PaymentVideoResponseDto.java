@@ -1,6 +1,6 @@
 package com.sparta.binplay.dto.response;
 
-import com.sparta.binplay.entity.PaymentVideo;
+import com.sparta.binplay.entity.payment.PaymentVideo;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,15 +11,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 public class PaymentVideoResponseDto {
-    private Long paymentId;
     private Double totalAmount;
     private LocalDateTime createAt;
 
     public static PaymentVideoResponseDto from(PaymentVideo payment) {
         return PaymentVideoResponseDto.builder()
-                .paymentId(payment.getPaymentVideoId())
                 .totalAmount(payment.getTotalAmount())
-                .createAt(payment.getCreatedAt())
+                //.createAt(payment.getCreatedAt())
                 .build();
     }
 }
