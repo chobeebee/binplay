@@ -4,10 +4,7 @@ import com.sparta.binplay.dto.request.VideoAdRequestDto;
 import com.sparta.binplay.entity.payment.PaymentAd;
 import com.sparta.binplay.entity.statistic.StatisticAd;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
@@ -16,8 +13,9 @@ import java.util.List;
 @Getter
 @Table(name="video_ad")
 @NoArgsConstructor
-@Builder
 @AllArgsConstructor
+@Builder
+@EqualsAndHashCode
 public class VideoAd {
     @Id
     @Column(name = "video_ad_id")

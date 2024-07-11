@@ -50,15 +50,15 @@ public class VideoController {
     }
 
     //비디오 수정
-    @PutMapping("/update/{videoId}")    // http://localhost:8080/videos/update/1
-    public ResponseEntity<VideoResponseDto> updateVideo(@PathVariable Long videoId, @RequestBody VideoRequestDto videoRequestDto) throws Exception {
+    @PutMapping("/update/{video-id}")    // http://localhost:8080/videos/update/1
+    public ResponseEntity<VideoResponseDto> updateVideo(@PathVariable("video-id") Long videoId, @RequestBody VideoRequestDto videoRequestDto) throws Exception {
         VideoResponseDto videoResponseDto = videoService.updateVideo(videoId,videoRequestDto);
         return ResponseEntity.status(HttpStatus.OK).body(videoResponseDto);
     }
 
     //비디오 삭제
-    @DeleteMapping("/delete/{videoId}")
-    public String deleteVideo(@PathVariable Long videoId) throws Exception{
+    @DeleteMapping("/delete/{video-id}")
+    public String deleteVideo(@PathVariable("video-id") Long videoId) throws Exception{
         videoService.deleteVideo(videoId);
         return  "삭제완료";
     }

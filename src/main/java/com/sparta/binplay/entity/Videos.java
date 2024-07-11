@@ -4,21 +4,18 @@ import com.sparta.binplay.dto.request.VideoRequestDto;
 import com.sparta.binplay.entity.payment.PaymentVideo;
 import com.sparta.binplay.entity.statistic.StatisticVideo;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Getter
-//@Setter
 @Table(name = "videos")
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = false)
 public class Videos extends Timestamped {
     @Id
     @Column(name = "video_id")
@@ -49,13 +46,14 @@ public class Videos extends Timestamped {
     @OneToMany(mappedBy = "video")
     private List<VideoAd> videoAd = new ArrayList<>();
 
-    @Builder.Default
+    //@Builder.Default
     @OneToMany(mappedBy = "video")
-    private List<StatisticVideo> statisticsVideo = new ArrayList<>();
+    private List<StatisticVideo> statisticVideo;
+    //private List<StatisticVideo> statisticsVideo = new ArrayList<>();
 
-    @Builder.Default
+    //@Builder.Default
     @OneToMany(mappedBy = "video")
-    private List<PaymentVideo> paymentsVideo = new ArrayList<>();
+    private List<PaymentVideo> paymentVideo = new ArrayList<>();
 
     public Videos(String title, String description, int videoLength) {
         this.title = title;

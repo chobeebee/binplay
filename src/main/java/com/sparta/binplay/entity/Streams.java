@@ -61,17 +61,16 @@ public class Streams {
     }
 
     public void updateViewingTime(int stopTime) {
+        //영상을 끝까지 봤다면 영상 처음으로 돌림
+        if(this.playTime == video.getVideoLength()) {
+            this.playTime = 0;
+        }
 
         if(video.getVideoLength() < playTime + stopTime) {
             this.playTime = video.getVideoLength();
             return;
         }
         this.playTime += stopTime;
-
-        //영상을 끝까지 봤다면 영상 처음으로 돌림
-        if(this.playTime == video.getVideoLength()) {
-            this.playTime = 0;
-        }
     }
 
 

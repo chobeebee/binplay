@@ -11,4 +11,9 @@ import java.time.LocalDate;
 public class StatisticVideoId implements Serializable {
     private LocalDate createdAt;
     private Long video;
+
+    public StatisticVideoId(LocalDate createdAt, Long video) {
+        this.createdAt = createdAt;
+        this.video = video;
+    }
 }

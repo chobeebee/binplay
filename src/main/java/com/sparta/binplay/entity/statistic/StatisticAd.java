@@ -2,25 +2,19 @@ package com.sparta.binplay.entity.statistic;
 
 import com.sparta.binplay.entity.VideoAd;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
-@Table(name="statistic_ad", uniqueConstraints = @UniqueConstraint(columnNames = {"video_ad_id", "created_at"}))
+@Builder
+@Table(name="statistic_ad")
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @IdClass(StatisticAdId.class)
 public class StatisticAd{
-
-    @Column(name="daily_view_count", nullable = false)
-    private long dailyViewCount;
 
     @Id
     @CreatedDate
@@ -29,8 +23,11 @@ public class StatisticAd{
 
     @Id
     @ManyToOne
-    @JoinColumn(name = "video_ad_id", nullable = false)
+    @JoinColumn(name = "video_ad_id")
     private VideoAd videoAd;
+
+    @Column(name="daily_view_count", nullable = false)
+    private long dailyViewCount;
 
    /* @Id
     @Column(name = "video_ad_id", nullable = false)

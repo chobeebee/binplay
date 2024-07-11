@@ -2,10 +2,7 @@ package com.sparta.binplay.entity.statistic;
 
 import com.sparta.binplay.entity.Videos;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
 import java.time.LocalDate;
@@ -19,12 +16,6 @@ import java.time.LocalDate;
 @IdClass(StatisticVideoId.class)
 public class StatisticVideo {
 
-    @Column(name="daily_view_count", nullable = false)
-    private long dailyViewCount;
-
-    @Column(name="daily_play_time", nullable = false)
-    private int dailyPlayTime;
-
     @Id
     @CreatedDate
     @Column(name="created_at", updatable = false) //업데이트를 막음
@@ -34,4 +25,15 @@ public class StatisticVideo {
     @ManyToOne
     @JoinColumn(name = "video_id")
     private Videos video;
+
+    @Column(name="daily_view_count", nullable = false)
+    private long dailyViewCount;
+
+    @Column(name="daily_play_time", nullable = false)
+    private int dailyPlayTime;
+
+    public void updateDailyViewAndPlayTime(long dailyViewCount,int dailyPlayTime) {
+        this.dailyViewCount = dailyViewCount;
+        this.dailyPlayTime = dailyPlayTime;
+    }
 }

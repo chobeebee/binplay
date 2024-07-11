@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -25,10 +25,14 @@ public class PaymentAd {
     @Id
     @CreatedDate
     @Column(name="created_at", updatable = false)
-    private LocalDateTime createdAt;
+    private LocalDate createdAt;
 
     @Id
     @ManyToOne
     @JoinColumn(name = "video_ad_id", nullable = false)
     private VideoAd videoAd;
+
+    public void updateTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
 }

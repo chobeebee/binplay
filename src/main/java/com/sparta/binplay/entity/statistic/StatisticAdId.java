@@ -1,7 +1,6 @@
 package com.sparta.binplay.entity.statistic;
 
 import com.sparta.binplay.entity.VideoAd;
-import jakarta.persistence.JoinColumn;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
@@ -12,7 +11,6 @@ import java.time.LocalDate;
 @EqualsAndHashCode
 public class StatisticAdId implements Serializable {
     private LocalDate createdAt;
-    @JoinColumn(name = "videoAdId", referencedColumnName = "video_ad_id")
     private VideoAd videoAd;
 
     public StatisticAdId(LocalDate createdAt, VideoAd videoAd) {

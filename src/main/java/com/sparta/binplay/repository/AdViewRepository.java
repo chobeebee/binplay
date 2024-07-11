@@ -9,9 +9,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public interface AdViewRepository extends JpaRepository<AdViews, Long> {
-    @Query("SELECT av.videoAd, COUNT(av) " +
-            "FROM AdViews av " +
-            "WHERE av.createdAt = :date " +
-            "GROUP BY av.videoAd")
-    List<Object[]> countViewsByVideoAdAndDate(@Param("date") LocalDate date);
+    @Query("SELECT av.videoAd, COUNT(av) FROM AdViews av WHERE av.createdAt = :date GROUP BY av.videoAd")
+    List<Object[]> countViews(@Param("date") LocalDate date);
 }
