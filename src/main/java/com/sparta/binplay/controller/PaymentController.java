@@ -1,20 +1,17 @@
 package com.sparta.binplay.controller;
 
 import com.sparta.binplay.dto.DailyTotalAmountDto;
-import com.sparta.binplay.dto.response.PaymentVideoResponseDto;
-import com.sparta.binplay.entity.payment.PaymentAd;
-import com.sparta.binplay.entity.payment.PaymentVideo;
-import com.sparta.binplay.repository.PaymentAdRepository;
-import com.sparta.binplay.repository.PaymentVideoRepository;
 import com.sparta.binplay.service.PaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -22,7 +19,7 @@ import java.util.List;
 public class PaymentController {
 
     private final PaymentService paymentService;
-    private final PaymentVideoRepository paymentVideoRepository;
+   /* private final PaymentVideoRepository paymentVideoRepository;
     private final PaymentAdRepository paymentAdRepository;
 
     @GetMapping("/video")
@@ -54,12 +51,30 @@ public class PaymentController {
     public ResponseEntity<Void> calculateAdPayment(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         paymentService.calculateAdPmt(date);
         return ResponseEntity.status(HttpStatus.OK).build();
-    }
+    }*/
 
     // 특정 날짜의 총 정산 금액을 조회하는 API
-    @GetMapping("/total-payment")
+   /* @GetMapping("/total-payment")
     public ResponseEntity<DailyTotalAmountDto> getDailyTotalPayment(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         DailyTotalAmountDto totalPayment = paymentService.getDailyTotalPayment(date);
+        return ResponseEntity.status(HttpStatus.OK).body(totalPayment);
+    }
+*/
+    @GetMapping("/total-payment/day")
+    public ResponseEntity<DailyTotalAmountDto> getDailyTotalPayment(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        DailyTotalAmountDto totalPayment = paymentService.getDailyTotalPayment(date);
+        return ResponseEntity.status(HttpStatus.OK).body(totalPayment);
+    }
+
+    @GetMapping("/total-payment/week")
+    public ResponseEntity<DailyTotalAmountDto> getWeeklyTotalPayment(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        DailyTotalAmountDto totalPayment = paymentService.getTotalPaymentForWeek(date);
+        return ResponseEntity.status(HttpStatus.OK).body(totalPayment);
+    }
+
+    @GetMapping("/total-payment/month")
+    public ResponseEntity<DailyTotalAmountDto> getMonthlyTotalPayment(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        DailyTotalAmountDto totalPayment = paymentService.getTotalPaymentForMonth(date);
         return ResponseEntity.status(HttpStatus.OK).body(totalPayment);
     }
 }

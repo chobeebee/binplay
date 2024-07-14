@@ -1,32 +1,25 @@
 package com.sparta.binplay.service;
 
-import com.sparta.binplay.entity.VideoAd;
-import com.sparta.binplay.entity.Videos;
-import com.sparta.binplay.entity.statistic.StatisticAd;
-import com.sparta.binplay.entity.statistic.StatisticVideo;
 import com.sparta.binplay.repository.AdViewRepository;
-import com.sparta.binplay.repository.StatisticAdRepository;
 import com.sparta.binplay.repository.StatisticVideoRepository;
 import com.sparta.binplay.repository.StreamRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class StatisticService {
-    private final StatisticAdRepository statisticAdRepository;
+    //private final StatisticAdRepository statisticAdRepository;
     private final StatisticVideoRepository statisticVideoRepository;
     private final AdViewRepository adViewRepository;
     private final StreamRepository streamRepository;
 
     //1일 비디오 통계
-    public void updateDailyViewVideo() {
+    /*public void updateDailyViewVideo() {
         LocalDate today = LocalDate.now();
         LocalDateTime startOfDay = today.atStartOfDay();
         LocalDateTime endOfDay = today.atTime(LocalTime.MAX);
@@ -51,10 +44,10 @@ public class StatisticService {
             statisticVideo.updateDailyViewAndPlayTime(dailyViewCount,dailyPlayTime);
             statisticVideoRepository.save(statisticVideo);
         }
-    }
+    }*/
 
     //1일 광고 통계
-    public void updateDailyViewAd() {
+    /*public void updateDailyViewAd() {
         LocalDate today = LocalDate.now();
         List<Object[]> results = adViewRepository.countViews(today);
 
@@ -73,7 +66,7 @@ public class StatisticService {
             statisticAd.updateDailyViewCount(dailyViewCount);
             statisticAdRepository.save(statisticAd);
         }
-    }
+    }*/
 
     public List<Object[]> getTop5VideosByViewsForDay(LocalDate date) {
         return statisticVideoRepository.findTop5VideosByViewsForDay(date);

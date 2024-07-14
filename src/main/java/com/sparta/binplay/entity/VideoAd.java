@@ -61,4 +61,8 @@ public class VideoAd {
                 .statIs(videoAdRequestDto.isStatIs())
                 .build();
     }
+
+    public void updateViewCount(long dailyViewCount) {
+        this.viewCount += dailyViewCount;
+    }
 }

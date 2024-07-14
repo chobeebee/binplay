@@ -12,15 +12,15 @@ import java.util.List;
 @RequestMapping("/stat")
 public class StatisticController {
 
+    private final StatisticService statisticService;
     /*private final AdViewService adViewService;
 
     @PostMapping("/update/dailyViewCounts")
     public void updateDailyViewCounts() {
         adViewService.updateDailyViewCounts();
     }*/
-    private final StatisticService statisticService;
 
-    @PostMapping("/update/dailyViewAd")
+    /*@PostMapping("/update/dailyViewAd")
     public void updateDailyViewCounts() {
         statisticService.updateDailyViewAd();
     }
@@ -28,7 +28,7 @@ public class StatisticController {
     @PostMapping("/update/dailyViewVideo")
     public void updateDailyViewVideo() {
         statisticService.updateDailyViewVideo();
-    }
+    }*/
 
     @GetMapping("/views-top5/day")
     public List<Object[]> getTop5VideosByViewsForDay(@RequestParam("date") LocalDate date) {

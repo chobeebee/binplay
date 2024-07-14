@@ -4,7 +4,6 @@ import com.sparta.binplay.dto.response.AdViewResponseDto;
 import com.sparta.binplay.entity.AdViews;
 import com.sparta.binplay.entity.VideoAd;
 import com.sparta.binplay.repository.AdViewRepository;
-import com.sparta.binplay.repository.StatisticAdRepository;
 import com.sparta.binplay.repository.VideoAdRepository;
 import com.sparta.binplay.repository.VideoRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +15,7 @@ public class AdViewService {
     private final AdViewRepository adViewRepository;
     private final VideoAdRepository videoAdRepository;
     private final VideoRepository videoRepository;
-    private final StatisticAdRepository statisticAdRepository;
-    
+
     //광고 시청 기록
     public AdViewResponseDto saveAdView(Long videoAdId) {
 

@@ -1,6 +1,7 @@
+/*
 package com.sparta.binplay.dto.response;
 
-import com.sparta.binplay.entity.payment.PaymentAd;
+import com.sparta.binplay.batch.domain.payment.PaymentAd;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -21,3 +22,4 @@ public class PaymentAdResponseDto {
                 .build();
     }
 }
+*/

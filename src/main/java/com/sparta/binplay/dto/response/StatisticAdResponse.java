@@ -1,3 +1,4 @@
+/*
 package com.sparta.binplay.dto.response;
 
 import lombok.*;
@@ -13,3 +14,4 @@ public class StatisticAdResponse {
     private LocalDate createdAt;
     private Long videoAdId;
 }
+*/

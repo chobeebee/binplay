@@ -1,28 +1,21 @@
 package com.sparta.binplay.service;
 
 import com.sparta.binplay.dto.DailyTotalAmountDto;
-import com.sparta.binplay.dto.response.PaymentAdResponseDto;
-import com.sparta.binplay.dto.response.PaymentVideoResponseDto;
-import com.sparta.binplay.entity.payment.PaymentAd;
-import com.sparta.binplay.entity.payment.PaymentVideo;
-import com.sparta.binplay.entity.statistic.StatisticAd;
-import com.sparta.binplay.entity.statistic.StatisticVideo;
 import com.sparta.binplay.repository.PaymentAdRepository;
 import com.sparta.binplay.repository.PaymentVideoRepository;
-import com.sparta.binplay.repository.StatisticAdRepository;
-import com.sparta.binplay.repository.StatisticVideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.temporal.TemporalAdjusters;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
     private final PaymentVideoRepository paymentVideoRepository;
     private final PaymentAdRepository paymentAdRepository;
+    /*private final VideoRepository videoRepository;
+    private final VideoAdRepository videoAdRepository;
     private final StatisticVideoRepository statisticVideoRepository;
     private final StatisticAdRepository statisticAdRepository;
 
@@ -42,11 +35,17 @@ public class PaymentService {
 
             paymentVideo.updateTotalAmount(totalAmount);
             paymentVideoRepository.save(paymentVideo);
+            
+            // 비디오 총 조회수 업데이트
+            Videos video = stat.getVideo();
+            video.updateViewCount(video.getViewCount() + stat.getDailyViewCount());
+            videoRepository.save(video);
         }
     }
 
     // 1일 광고 정산
     public void calculateAdPmt(LocalDate date) {
+
         List<StatisticAd> stats = statisticAdRepository.findByCreatedAt(date);
 
         for (StatisticAd stat : stats) {
@@ -60,6 +59,11 @@ public class PaymentService {
 
             paymentAd.updateTotalAmount(totalAmount);
             paymentAdRepository.save(paymentAd);
+
+            // 광고 총 조회수 업데이트
+            VideoAd videoAd = stat.getVideoAd();
+            videoAd.updateViewCount(videoAd.getViewCount() + stat.getDailyViewCount());
+            videoAdRepository.save(videoAd);
         }
     }
 
@@ -85,9 +89,9 @@ public class PaymentService {
         return payments.stream()
                 .map(PaymentAdResponseDto::from)
                 .collect(Collectors.toList());
-    }
+    }*/
 
-    // 총 금액, 광고 정산, 영상 정산
+    /*// 총 금액, 광고 정산, 영상 정산
     public DailyTotalAmountDto getDailyTotalPayment(LocalDate date) {
         double totalVideoAmount = paymentVideoRepository.findAllByCreatedAt(date).stream()
                 .mapToDouble(payment -> Math.floor(payment.getTotalAmount()))
@@ -104,9 +108,9 @@ public class PaymentService {
                 .totalAdAmount(totalAdAmount)
                 .totalAmount(totalAmount)
                 .build();
-    }
+    }*/
 
-    // 비디오 단가
+    /*// 비디오 단가
     private double calculateVideoAmount(long viewCount) {
         if (viewCount < 100000) return viewCount * 1;
         else if (viewCount < 500000) return viewCount * 1.1;
@@ -120,5 +124,40 @@ public class PaymentService {
         else if (viewCount < 500000) return viewCount * 12;
         else if (viewCount < 1000000) return viewCount * 15;
         else return viewCount * 20;
+    }*/
+
+
+    public DailyTotalAmountDto getDailyTotalPayment(LocalDate date) {
+        return calculateTotalPayment(date, date);
+    }
+
+    public DailyTotalAmountDto getTotalPaymentForWeek(LocalDate date) {
+        LocalDate startOfWeek = date.with(java.time.DayOfWeek.MONDAY);
+        LocalDate endOfWeek = date.with(java.time.DayOfWeek.SUNDAY);
+        return calculateTotalPayment(startOfWeek, endOfWeek);
+    }
+
+    public DailyTotalAmountDto getTotalPaymentForMonth(LocalDate date) {
+        LocalDate startOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
+        LocalDate endOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
+        return calculateTotalPayment(startOfMonth, endOfMonth);
+    }
+
+    private DailyTotalAmountDto calculateTotalPayment(LocalDate startDate, LocalDate endDate) {
+        Double totalVideoAmount = paymentVideoRepository.findTotalAmountByCreatedAtBetween(startDate, endDate);
+        Double totalAdAmount = paymentAdRepository.findTotalAmountByCreatedAtBetween(startDate, endDate);
+
+        if (totalVideoAmount == null) totalVideoAmount = 0.0;
+        if (totalAdAmount == null) totalAdAmount = 0.0;
+
+        double totalVideoAmountRounded = Math.floor(totalVideoAmount);
+        double totalAdAmountRounded = Math.floor(totalAdAmount);
+        double totalAmountRounded = Math.floor(totalVideoAmount + totalAdAmount);
+
+        return DailyTotalAmountDto.builder()
+                .totalVideoAmount(totalVideoAmountRounded)
+                .totalAdAmount(totalAdAmountRounded)
+                .totalAmount(totalAmountRounded)
+                .build();
     }
 }

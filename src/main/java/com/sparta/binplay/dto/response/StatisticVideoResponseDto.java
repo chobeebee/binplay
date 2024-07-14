@@ -1,6 +1,7 @@
+/*
 package com.sparta.binplay.dto.response;
 
-import com.sparta.binplay.entity.statistic.StatisticVideo;
+import com.sparta.binplay.batch.domain.statistic.StatisticVideo;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -23,3 +24,4 @@ public class StatisticVideoResponseDto {
                 .build();
     }
 }
+*/

@@ -1,6 +1,5 @@
 package com.sparta.binplay.repository;
 
-import com.sparta.binplay.entity.Videos;
 import com.sparta.binplay.entity.statistic.StatisticVideo;
 import com.sparta.binplay.entity.statistic.StatisticVideoId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,13 +9,12 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface StatisticVideoRepository extends JpaRepository<StatisticVideo, StatisticVideoId> {
-    List<StatisticVideo> findByVideoVideoId(Long videoId);
+   /* List<StatisticVideo> findByVideoVideoId(Long videoId);
     Optional<StatisticVideo> findByVideoAndCreatedAt(Videos video, LocalDate createdAt);
-    List<StatisticVideo> findByCreatedAt(LocalDate date);
+    List<StatisticVideo> findByCreatedAt(LocalDate date);*/
 
     @Query("SELECT sv.video.videoId, v.title, SUM(sv.dailyViewCount) as totalViews " +
             "FROM StatisticVideo sv JOIN sv.video v WHERE sv.createdAt = :date " +

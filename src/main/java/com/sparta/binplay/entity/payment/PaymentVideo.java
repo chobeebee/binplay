@@ -1,6 +1,5 @@
 package com.sparta.binplay.entity.payment;
 
-import com.sparta.binplay.dto.request.PaymentVideoRequestDto;
 import com.sparta.binplay.entity.Videos;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -37,10 +36,10 @@ public class PaymentVideo {
         this.totalAmount = totalAmount;
     }
 
-    public static PaymentVideo of(PaymentVideoRequestDto paymentVideoRequestDto) {
+    /*public static PaymentVideo of(PaymentVideoRequestDto paymentVideoRequestDto) {
         return PaymentVideo.builder()
                 .totalAmount(paymentVideoRequestDto.getTotalAmount())
                 .video(paymentVideoRequestDto.getVideo())
                 .build();
-    }
+    }*/
 }

@@ -80,6 +80,10 @@ public class Videos extends Timestamped {
         this.viewCount++;
     }
 
+    public void updateViewCount(long dailyViewCount) {
+        this.viewCount += dailyViewCount;
+    }
+
     public void addVideoAd(VideoAd videoAd) {
         this.videoAd.add(videoAd);
     }

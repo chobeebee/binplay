@@ -1,8 +1,9 @@
+/*
 package com.sparta.binplay.repository;
 
 import com.sparta.binplay.entity.VideoAd;
-import com.sparta.binplay.entity.statistic.StatisticAd;
-import com.sparta.binplay.entity.statistic.StatisticAdId;
+import com.sparta.binplay.batch.domain.statistic.StatisticAd;
+import com.sparta.binplay.batch.domain.statistic.StatisticAdId;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -16,3 +17,4 @@ public interface StatisticAdRepository extends JpaRepository<StatisticAd, Statis
     List<StatisticAd> findByCreatedAt(LocalDate date);
     //Optional<StatisticAd> findByVideoAdAndCreatedAt(Long videoAd, LocalDate createdAt);
 }
+*/
