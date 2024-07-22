@@ -15,29 +15,63 @@
     
 </div>
 
-
 <p>&#160;</p>
 
 # 📌Binplay
 ### 스트리밍 서비스 정산 프로젝트
 <p>유저에게 업로드한 동영상 별로 조회수에 따른 통계와 정산을 제공하는 프로젝트입니다.</p>
+<span style="color:gray"> 2024.07~2024.06 | 1인 </span>
+
+<p>&#160;</p>
+
+## 📋설치 및 실행 방법
+<details>
+    <summary>사전 요구사항</summary>
+    <ul>
+        <li>Docker 및 Docker Compose 설치 </li>
+        <li>Java 21 이상 설치</li>
+        <li>Gradle 설치</li>
+    </ul>
+</details>
+<details>
+    <summary>클론 및 빌드</summary>
+
+   ```
+   git clone https://github.com/yourusername/binplay.git
+   cd binplay
+   ./gradlew build
+   ```
+</details>
+
+<details>
+    <summary>Docker를 사용한 애플리케이션 실행</summary>
+
+   ```
+   docker-compose up -d
+   ```
+</details>
+
+<p>&#160;</p>
+
+## 🛠️트러블 슈팅
+### 1. 멀티 스레드 속도 향상
+### 2. 동시성 이슈 해결
 
 <p>&#160;</p>
 
 ## 🎯주요 기능
-1. 회원가입
-    - 소셜 로그인(구글)을 통해 간편한 회원가입 제공
-    - 로그인 및 로그아웃
-2. 동영상 관리
-    - 동영상 등록·수정·삭제·조회
-    - 5분 간격 랜덤 광고 배정
-    - 최근 재생 시점부터 동영상 재생
-3. 통계 데이터 조회
-    - 1일, 1주, 1달 동안의 조회수가 높은 동영상 TOP5
-    - 1일, 1주, 1달 동안의 재생 시간이 긴 동영상 TOP5
-4. 정산 데이터 조회
-    - 1일, 1주, 1달 총 정산 금액
-    - 동영상 별, 광고 별 정산
+### 회원가입
+- 구글 소셜 로그인 연동을 통해 간편하게 회원가입 및 로그인이 가능합니다.
+### 동영상 관리
+- 동영상 등록·수정·삭제·조회를 통해 업로드한 동영상을 관리할 수 있습니다.
+- 동영상 재생 시 5분 간격으로 랜덤 광고가 배정됩니다.
+- 마지막 재생 시점부터 동영상을 이어서 시청할 수 있습니다.
+### 통계 데이터 조회
+- 업로드한 동영상 중, 1일, 1주, 1달 동안의 조회수가 높은 동영상 TOP5를 조회할 수 있습니다.
+- 업로드한 동영상 중, 1일, 1주, 1달 동안의 재생 시간이 긴 동영상 TOP5를 조회할 수 있습니다.
+### 정산 데이터 조회
+- 1일, 1주, 1달 총 정산 금액을 조회할 수 있습니다.
+- 동영상 별, 광고 별 정산 금액을 조회할 수 있습니다.
 
 <p>&#160;</p>
 
@@ -51,63 +85,6 @@
     <summary>API</summary>
     추가 예정
 </details>
-
-<p>&#160;</p>
-
-## 📋실행 방법
-### Docker를 사용한 설치 및 실행 방법
-<details>
-    <summary>1. 프로젝트 클론</summary>
-
-   ```
-   git clone https://github.com/chobeebee/binplay.git
-   cd binplay
-   ```
-</details>
-
-<details>
-    <summary>2. docker-compose.yml 파일 작성</summary>
-
-   ```
-   version: '3.8'
-   services:
-      db:
-        image: mysql:8.0
-        environment:
-          MYSQL_ROOT_PASSWORD: rootpassword
-          MYSQL_DATABASE: mydatabase
-          MYSQL_USER: user
-          MYSQL_PASSWORD: password
-        ports:
-          - "3306:3306"
-        volumes:
-          - db-data:/var/lib/mysql
-    
-      app:
-        build: .
-        ports:
-          - "8080:8080"
-        depends_on:
-          - db
-    
-   volumes:
-      db-data:
-   ```
-</details>
-
-<details>
-    <summary>3. Docker 컨테이너 실행</summary>
-
-   ```
-   docker-compose up
-   ```
-</details>
-
-<p>&#160;</p>
-
-## 🛠️트러블 슈팅
-### 1. 멀티 스레드 속도 향상
-### 2. 동시성 이슈 해결
 
 <p>&#160;</p>
 
