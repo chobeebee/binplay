@@ -2,17 +2,14 @@ package com.sparta.binplay.entity;
 
 import com.sparta.binplay.dto.request.StreamRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.*;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "streams")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +27,7 @@ public class Streams {
     @Column(name = "paused_at")
     private int pausedAt;
 
-    @CreatedDate
+    //@CreatedDate
     @Column(name="created_at", updatable = false)
     private LocalDateTime createdAt;
 

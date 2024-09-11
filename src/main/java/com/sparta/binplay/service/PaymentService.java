@@ -1,163 +1,122 @@
 package com.sparta.binplay.service;
 
 import com.sparta.binplay.dto.DailyTotalAmountDto;
+import com.sparta.binplay.dto.MonthlyTotalAmountDto;
+import com.sparta.binplay.dto.VideoAmountDto;
+import com.sparta.binplay.dto.WeeklyTotalAmountDto;
+import com.sparta.binplay.entity.payment.PaymentAd;
+import com.sparta.binplay.entity.payment.PaymentVideo;
 import com.sparta.binplay.repository.PaymentAdRepository;
 import com.sparta.binplay.repository.PaymentVideoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class PaymentService {
     private final PaymentVideoRepository paymentVideoRepository;
     private final PaymentAdRepository paymentAdRepository;
-    /*private final VideoRepository videoRepository;
-    private final VideoAdRepository videoAdRepository;
-    private final StatisticVideoRepository statisticVideoRepository;
-    private final StatisticAdRepository statisticAdRepository;
 
-    // 1일 비디오 정산
-    public void calculateVideoPmt(LocalDate date) {
+    public DailyTotalAmountDto getDailyPaymentSummary(LocalDate date) {
+        List<PaymentVideo> videoPayments = paymentVideoRepository.findByCreatedAt(date);
+        List<PaymentAd> adPayments = paymentAdRepository.findByCreatedAt(date);
 
-        List<StatisticVideo> stats = statisticVideoRepository.findByCreatedAt(date);
+        Map<Long, VideoAmountDto> breakdownMap = new HashMap<>();
 
-        for (StatisticVideo stat : stats) {
-            double totalAmount = Math.floor(calculateVideoAmount(stat.getDailyViewCount()));
-            PaymentVideo paymentVideo = paymentVideoRepository.findByVideoAndCreatedAt(stat.getVideo(), date)
-                    .orElseGet(() -> PaymentVideo.builder()
-                            .video(stat.getVideo())
-                            .createdAt(date)
-                            .totalAmount(0.0)
-                            .build());
+        BigDecimal totalVideoAmount = BigDecimal.ZERO;
+        BigDecimal totalAdAmount = BigDecimal.ZERO;
 
-            paymentVideo.updateTotalAmount(totalAmount);
-            paymentVideoRepository.save(paymentVideo);
-            
-            // 비디오 총 조회수 업데이트
-            Videos video = stat.getVideo();
-            video.updateViewCount(video.getViewCount() + stat.getDailyViewCount());
-            videoRepository.save(video);
+        for (PaymentVideo payment : videoPayments) {
+            BigDecimal amount = BigDecimal.valueOf(payment.getTotalAmount());
+            Long videoId = payment.getVideo().getVideoId();
+            breakdownMap.computeIfAbsent(videoId, k -> new VideoAmountDto(videoId.toString(), BigDecimal.ZERO, BigDecimal.ZERO))
+                    .addVideoAmount(amount);
+            totalVideoAmount = totalVideoAmount.add(amount);
         }
-    }
 
-    // 1일 광고 정산
-    public void calculateAdPmt(LocalDate date) {
-
-        List<StatisticAd> stats = statisticAdRepository.findByCreatedAt(date);
-
-        for (StatisticAd stat : stats) {
-            double totalAmount = Math.floor(calculateAdAmount(stat.getDailyViewCount()));
-            PaymentAd paymentAd = paymentAdRepository.findByVideoAdAndCreatedAt(stat.getVideoAd(), date)
-                    .orElseGet(() -> PaymentAd.builder()
-                            .videoAd(stat.getVideoAd())
-                            .createdAt(date)
-                            .totalAmount(0.0)
-                            .build());
-
-            paymentAd.updateTotalAmount(totalAmount);
-            paymentAdRepository.save(paymentAd);
-
-            // 광고 총 조회수 업데이트
-            VideoAd videoAd = stat.getVideoAd();
-            videoAd.updateViewCount(videoAd.getViewCount() + stat.getDailyViewCount());
-            videoAdRepository.save(videoAd);
+        for (PaymentAd payment : adPayments) {
+            BigDecimal amount = BigDecimal.valueOf(payment.getTotalAmount());
+            Long videoId = payment.getVideoAd().getVideo().getVideoId();
+            breakdownMap.computeIfAbsent(videoId, k -> new VideoAmountDto(videoId.toString(), BigDecimal.ZERO, BigDecimal.ZERO))
+                    .addAdAmount(amount);
+            totalAdAmount = totalAdAmount.add(amount);
         }
+
+        List<VideoAmountDto> breakdowns = new ArrayList<>(breakdownMap.values());
+
+        return new DailyTotalAmountDto(totalVideoAmount, totalAdAmount, breakdowns);
     }
 
-    // 모든 비디오 정산 데이터 조회
-    public List<PaymentVideoResponseDto> getAllVideoPayments(LocalDate date) {
-        List<PaymentVideo> payments = paymentVideoRepository.findAllByCreatedAt(date);
-        return payments.stream()
-                .map(PaymentVideoResponseDto::from)
-                .collect(Collectors.toList());
+    public WeeklyTotalAmountDto getWeeklyPaymentSummary() {
+        LocalDate today = LocalDate.now();
+
+        // 오늘 날짜가 포함된 주의 월요일을 구함
+        LocalDate startOfWeek = today.with(DayOfWeek.MONDAY);
+        // 오늘 날짜가 포함된 주의 일요일을 구함
+        LocalDate endOfWeek = today.with(DayOfWeek.SUNDAY);
+
+        BigDecimal totalVideoAmountForWeek = BigDecimal.ZERO;
+        BigDecimal totalAdAmountForWeek = BigDecimal.ZERO;
+        Map<String, VideoAmountDto> videoSummaryMap = new HashMap<>();
+
+        for (LocalDate date = startOfWeek; !date.isAfter(endOfWeek); date = date.plusDays(1)) {
+            DailyTotalAmountDto dailySummary = getDailyPaymentSummary(date);
+
+            totalVideoAmountForWeek = totalVideoAmountForWeek.add(dailySummary.getTotalVideoAmount());
+            totalAdAmountForWeek = totalAdAmountForWeek.add(dailySummary.getTotalAdAmount());
+
+            for (VideoAmountDto videoBreakdown : dailySummary.getVideoBreakdowns()) {
+                String videoId = videoBreakdown.getVideoId();
+                videoSummaryMap.computeIfAbsent(videoId, k -> new VideoAmountDto(videoId, BigDecimal.ZERO, BigDecimal.ZERO))
+                        .addVideoAmount(videoBreakdown.getVideoAmount())
+                        .addAdAmount(videoBreakdown.getAdAmount());
+            }
+        }
+
+        // 비디오별 합산 결과 리스트
+        List<VideoAmountDto> videoSummaries = new ArrayList<>(videoSummaryMap.values());
+
+        return new WeeklyTotalAmountDto(totalVideoAmountForWeek, totalAdAmountForWeek, videoSummaries);
     }
 
-    // 비디오 정산 데이터 조회
-    public List<PaymentVideoResponseDto> getDailyVideoPayments(LocalDate date) {
-        List<PaymentVideo> payments = paymentVideoRepository.findAllByCreatedAt(date);
-        return payments.stream()
-                .map(PaymentVideoResponseDto::from)
-                .collect(Collectors.toList());
-    }
+    public MonthlyTotalAmountDto getMonthlyPaymentSummary() {
+        LocalDate today = LocalDate.now();
 
-    // 광고 정산 데이터 조회
-    public List<PaymentAdResponseDto> getDailyAdPayments(LocalDate date) {
-        List<PaymentAd> payments = paymentAdRepository.findAllByCreatedAt(date);
-        return payments.stream()
-                .map(PaymentAdResponseDto::from)
-                .collect(Collectors.toList());
-    }*/
+        // 이번 달의 첫 번째 날
+        LocalDate startOfMonth = today.withDayOfMonth(1);
+        // 이번 달의 마지막 날
+        LocalDate endOfMonth = today.withDayOfMonth(today.lengthOfMonth());
 
-    /*// 총 금액, 광고 정산, 영상 정산
-    public DailyTotalAmountDto getDailyTotalPayment(LocalDate date) {
-        double totalVideoAmount = paymentVideoRepository.findAllByCreatedAt(date).stream()
-                .mapToDouble(payment -> Math.floor(payment.getTotalAmount()))
-                .sum();
+        BigDecimal totalVideoAmountForMonth = BigDecimal.ZERO;
+        BigDecimal totalAdAmountForMonth = BigDecimal.ZERO;
+        Map<String, VideoAmountDto> videoSummaryMap = new HashMap<>();
 
-        double totalAdAmount = paymentAdRepository.findAllByCreatedAt(date).stream()
-                .mapToDouble(payment -> Math.floor(payment.getTotalAmount()))
-                .sum();
+        // 월간 데이터를 처리
+        for (LocalDate date = startOfMonth; !date.isAfter(endOfMonth); date = date.plusDays(1)) {
+            DailyTotalAmountDto dailySummary = getDailyPaymentSummary(date);
 
-        double totalAmount = totalVideoAmount + totalAdAmount;
+            totalVideoAmountForMonth = totalVideoAmountForMonth.add(dailySummary.getTotalVideoAmount());
+            totalAdAmountForMonth = totalAdAmountForMonth.add(dailySummary.getTotalAdAmount());
 
-        return DailyTotalAmountDto.builder()
-                .totalVideoAmount(totalVideoAmount)
-                .totalAdAmount(totalAdAmount)
-                .totalAmount(totalAmount)
-                .build();
-    }*/
+            for (VideoAmountDto videoBreakdown : dailySummary.getVideoBreakdowns()) {
+                String videoId = videoBreakdown.getVideoId();
+                videoSummaryMap.computeIfAbsent(videoId, k -> new VideoAmountDto(videoId, BigDecimal.ZERO, BigDecimal.ZERO))
+                        .addVideoAmount(videoBreakdown.getVideoAmount())
+                        .addAdAmount(videoBreakdown.getAdAmount());
+            }
+        }
 
-    /*// 비디오 단가
-    private double calculateVideoAmount(long viewCount) {
-        if (viewCount < 100000) return viewCount * 1;
-        else if (viewCount < 500000) return viewCount * 1.1;
-        else if (viewCount < 1000000) return viewCount * 1.3;
-        else return viewCount * 1.5;
-    }
+        // 비디오별 합산 결과 리스트
+        List<VideoAmountDto> videoSummaries = new ArrayList<>(videoSummaryMap.values());
 
-    // 광고 단가
-    private double calculateAdAmount(long viewCount) {
-        if (viewCount < 100000) return viewCount * 10;
-        else if (viewCount < 500000) return viewCount * 12;
-        else if (viewCount < 1000000) return viewCount * 15;
-        else return viewCount * 20;
-    }*/
-
-
-    public DailyTotalAmountDto getDailyTotalPayment(LocalDate date) {
-        return calculateTotalPayment(date, date);
-    }
-
-    public DailyTotalAmountDto getTotalPaymentForWeek(LocalDate date) {
-        LocalDate startOfWeek = date.with(java.time.DayOfWeek.MONDAY);
-        LocalDate endOfWeek = date.with(java.time.DayOfWeek.SUNDAY);
-        return calculateTotalPayment(startOfWeek, endOfWeek);
-    }
-
-    public DailyTotalAmountDto getTotalPaymentForMonth(LocalDate date) {
-        LocalDate startOfMonth = date.with(TemporalAdjusters.firstDayOfMonth());
-        LocalDate endOfMonth = date.with(TemporalAdjusters.lastDayOfMonth());
-        return calculateTotalPayment(startOfMonth, endOfMonth);
-    }
-
-    private DailyTotalAmountDto calculateTotalPayment(LocalDate startDate, LocalDate endDate) {
-        Double totalVideoAmount = paymentVideoRepository.findTotalAmountByCreatedAtBetween(startDate, endDate);
-        Double totalAdAmount = paymentAdRepository.findTotalAmountByCreatedAtBetween(startDate, endDate);
-
-        if (totalVideoAmount == null) totalVideoAmount = 0.0;
-        if (totalAdAmount == null) totalAdAmount = 0.0;
-
-        double totalVideoAmountRounded = Math.floor(totalVideoAmount);
-        double totalAdAmountRounded = Math.floor(totalAdAmount);
-        double totalAmountRounded = Math.floor(totalVideoAmount + totalAdAmount);
-
-        return DailyTotalAmountDto.builder()
-                .totalVideoAmount(totalVideoAmountRounded)
-                .totalAdAmount(totalAdAmountRounded)
-                .totalAmount(totalAmountRounded)
-                .build();
+        return new MonthlyTotalAmountDto(totalVideoAmountForMonth, totalAdAmountForMonth, videoSummaries);
     }
 }

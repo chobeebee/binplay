@@ -2,16 +2,13 @@ package com.sparta.binplay.entity;
 
 import com.sparta.binplay.dto.request.AdViewRequestDto;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.*;
 
 import java.time.LocalDate;
 
 @Entity
 @Getter
+@Setter
 @Table(name="ad_views")
 @NoArgsConstructor
 @Builder
@@ -23,7 +20,7 @@ public class AdViews {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long adViewId;
 
-    @CreationTimestamp
+    //@CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDate createdAt;
 
