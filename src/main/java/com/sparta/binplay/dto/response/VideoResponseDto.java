@@ -27,6 +27,7 @@ public class VideoResponseDto {
                 .viewCount(video.getViewCount())
                 .videoLength(video.getVideoLength())
                 .createdAt(video.getCreatedAt())
+                .updatedAt(video.getUpdatedAt())
                 .build();
     }
 

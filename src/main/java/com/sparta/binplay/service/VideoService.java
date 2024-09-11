@@ -84,7 +84,7 @@ public class VideoService {
     //비디오 수정
     @Transactional
     public VideoResponseDto updateVideo(Long videoId, VideoRequestDto videoRequestDto) throws Exception {
-        Users user = getAuthenticatedUser(); //권한
+        //Users user = getAuthenticatedUser(); //권한
         Videos video = videoRepository.findByVideoId(videoId).orElseThrow(() -> new RuntimeException("비디오를 찾을 수 없음"));
 
         video.update(videoRequestDto);
@@ -98,8 +98,12 @@ public class VideoService {
     public void deleteVideo(Long videoId) throws Exception {
         Videos video = getVideos(videoId);
         Users user = video.getUser();
-        user.getVideos().remove(video); // User의 비디오 리스트에서 비디오 제거
-        videoRepository.delete(video);
+
+        // User의 비디오 리스트에서 비디오 제거
+        user.getVideos().remove(video);
+
+        // 관련된 video_ad 엔티티 삭제
+        videoAdRepository.deleteByVideoId(videoId);
 
         // Video 엔티티 삭제
         videoRepository.delete(video);
