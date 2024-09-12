@@ -35,6 +35,8 @@
     - 대량 데이터 삽입 및 최적화
 - [✏️주요 기능](#%EF%B8%8F주요-기능)
 - [🕹️프로젝트 상세](#%EF%B8%8F프로젝트-상세)
+    - API문서
+    - ERD
 
 <p>&#160;</p>
 
@@ -127,10 +129,10 @@
 
 ## ✏️프로젝트 상세
 #### API
-[![POSTMAN](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/33433405/2sAXqmBQtQ)
+[![POSTMAN](https://img.shields.io/badge/Postman-API_Link-FF6C37?style=for-the-badge&logo=postman&logoColor=white)](https://documenter.getpostman.com/view/33433405/2sAXqmBQtQ)
 #### ERD
 <details> 
-    <summary>ERD Image</summary>
+    <summary>ERD IMAGE</summary>
     <img src="https://postfiles.pstatic.net/MjAyNDA3MjBfMTQw/MDAxNzIxNDA5ODk2MTM2.7ywqKUn2baDmlwFBNA6UWSsNlCRoWkBbRGDzuuY9mUYg.1uArCbuwAW4CP4oQdXtqH1loOHayqaoN0YHt7olEQuYg.PNG/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7_2024-07-20_022435.png?type=w966" width="620">
 </details>
 
